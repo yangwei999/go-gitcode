@@ -54,7 +54,7 @@ func (s *RepositoryService) GetRepoBranch(ctx context.Context, owner, repo, bran
 // CreateRepoBranch 创建分支
 //
 // api Docs: https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-branches
-func (s *PullRequestsService) CreateRepoBranch(ctx context.Context, owner, repo, branch, createFrom string) (bool, error) {
+func (s *RepositoryService) CreateRepoBranch(ctx context.Context, owner, repo, branch, createFrom string) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/branches", owner, repo)
 	req, err := newRequest(s.api, http.MethodPost, urlStr, &BranchRequest{
 		CreateFrom: createFrom,
@@ -71,7 +71,7 @@ func (s *PullRequestsService) CreateRepoBranch(ctx context.Context, owner, repo,
 // CreateRepoBranchProtectedRule 新建保护分支规则
 //
 // api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-branches-setting-new
-func (s *PullRequestsService) CreateRepoBranchProtectedRule(ctx context.Context, owner, repo, branch, permission string) (bool, error) {
+func (s *RepositoryService) CreateRepoBranchProtectedRule(ctx context.Context, owner, repo, branch, permission string) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/branches/setting/new", owner, repo)
 	req, err := newRequest(s.api, http.MethodPost, urlStr, &BranchProtectedRuleRequest{
 		PushPermission:  permission,
@@ -89,7 +89,7 @@ func (s *PullRequestsService) CreateRepoBranchProtectedRule(ctx context.Context,
 // UpdateRepoBranchProtectedRule 更新保护分支规则
 //
 // api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-branches-wildcard-setting
-func (s *PullRequestsService) UpdateRepoBranchProtectedRule(ctx context.Context, owner, repo, branch, permission string) (bool, error) {
+func (s *RepositoryService) UpdateRepoBranchProtectedRule(ctx context.Context, owner, repo, branch, permission string) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/branches/%s/setting", owner, repo, branch)
 	req, err := newRequest(s.api, http.MethodPut, urlStr, &BranchProtectedRuleRequest{
 		PushPermission:  permission,
@@ -106,7 +106,7 @@ func (s *PullRequestsService) UpdateRepoBranchProtectedRule(ctx context.Context,
 // RemoveRepoBranchProtectedRule 删除保护分支规则
 //
 // api Docs: https://docs.gitcode.com/docs/apis/delete-api-v-5-repos-owner-repo-branches-wildcard-setting
-func (s *PullRequestsService) RemoveRepoBranchProtectedRule(ctx context.Context, owner, repo, branch string) (bool, error) {
+func (s *RepositoryService) RemoveRepoBranchProtectedRule(ctx context.Context, owner, repo, branch string) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/branches/%s/setting", owner, repo, branch)
 	req, err := newRequest(s.api, http.MethodDelete, urlStr, nil)
 	if err != nil {

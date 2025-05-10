@@ -16,76 +16,81 @@ package openapi
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
 )
 
-func TestUpdateIssue(t *testing.T) {
-
+func TestIssues(t *testing.T) {
 	client, mux, _ := mockServer(t)
 
-	issue := new(Issue)
-	_ = readTestdata(t, issuesTestDataDir+"issues_update.json", issue)
+	var want Issue
+	_ = readTestdata(t, issuesTestDataDir+"issues_update.json", &want)
 
-	mux.HandleFunc(prefixUrlPath+owner+"/issues/1", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set(headerContentTypeName, headerContentTypeJsonValue)
-		err := json.NewEncoder(w).Encode(issue)
-		if err != nil {
-			t.Errorf("Issues.UpdateIssue mock response data error: %v", err)
-		}
-	})
+	createIssue(t, client, mux, want)
+	getIssue(t, client, mux, want)
+	updateIssue(t, client, mux, want)
+	getLinkedPR(t, client, mux)
+}
 
-	ctx := context.Background()
-	result, ok, err := client.Issues.UpdateIssue(ctx, owner, "1", &IssueRequest{
+func createIssue(t *testing.T, client *APIClient, mux *http.ServeMux, want Issue) {
+
+	urlStr := fmt.Sprintf("/repos/%s/issues", owner)
+	mockResponse(t, mux, urlStr, want)
+	got, ok, err := client.Issues.CreateIssue(context.Background(), owner, &IssueRequest{})
+	assert.Nil(t, err)
+	assert.True(t, ok)
+	assert.Equal(t, want, *got)
+}
+
+func getIssue(t *testing.T, client *APIClient, mux *http.ServeMux, want Issue) {
+
+	urlStr := fmt.Sprintf("/repos/%s/%s/issues/%s", owner, repo, number)
+	mockResponse(t, mux, urlStr, want)
+	got, ok, err := client.Issues.GetIssue(context.Background(), owner, repo, number)
+	assert.Nil(t, err)
+	assert.True(t, ok)
+	assert.Equal(t, want, *got)
+}
+
+func updateIssue(t *testing.T, client *APIClient, mux *http.ServeMux, want Issue) {
+
+	urlStr := fmt.Sprintf("/repos/%s/issues/%s", owner, number)
+	mockResponse(t, mux, urlStr, want)
+	got, ok, err := client.Issues.UpdateIssue(context.Background(), owner, number, &IssueRequest{
 		Repository: repo,
 		Title:      "issue1",
 	})
-	if err != nil {
-		t.Errorf("Issues.UpdateIssue returned error: %v", err)
-	}
-	assert.Equal(t, true, ok)
-	assert.Equal(t, issue, result)
+	assert.Nil(t, err)
+	assert.True(t, ok)
+	assert.Equal(t, want, *got)
 
+	urlStr = fmt.Sprintf("/repos/%s/issues/%s", owner, "2")
 	errMsg := "{\n    \"error_code\": 403,\n    \"error_code_name\": \"FORBIDDEN\",\n    \"error_message\": \"no scopes:read_projects\",\n    \"trace_id\": \"33809e888a654b78bb2be8e7c97c9423\"\n}"
-	mux.HandleFunc(prefixUrlPath+owner+"/issues/2", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(urlStr, func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, errMsg, http.StatusBadRequest)
 	})
-
-	result, ok, err = client.Issues.UpdateIssue(context.Background(), owner, "2", &IssueRequest{
+	got, ok, err = client.Issues.UpdateIssue(context.Background(), owner, "2", &IssueRequest{
 		Repository: repo,
 		Title:      "issue2",
 	})
-
 	assert.Equal(t, false, ok)
-	assert.Equal(t, Issue{}, *result)
+	assert.Equal(t, Issue{}, *got)
 	assert.Equal(t, errMsg+"\n", err.Error())
 }
 
-func TestListIssueLinkingPullRequests(t *testing.T) {
-
-	client, mux, _ := mockServer(t)
-
+func getLinkedPR(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	prs := new([]*PullRequest)
 	_ = readTestdata(t, issuesTestDataDir+"issues_linking_prs.json", prs)
-
-	mux.HandleFunc(prefixUrlPath+owner+"/"+repo+"/issues/1/pull_requests", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set(headerContentTypeName, headerContentTypeJsonValue)
-		err := json.NewEncoder(w).Encode(prs)
-		if err != nil {
-			t.Errorf("Issues.ListIssueLinkingPullRequests mock response data error: %v", err)
-		}
-	})
-
-	ctx := context.Background()
-	result, ok, err := client.Issues.ListIssueLinkingPullRequests(ctx, owner, repo, "1")
-	if err != nil {
-		t.Errorf("Issues.ListIssueLinkingPullRequests returned error: %v", err)
-	}
-	assert.Equal(t, true, ok)
+	urlStr := fmt.Sprintf("/repos/%s/%s/issues/%s/pull_requests", owner, repo, number)
+	mockResponse(t, mux, urlStr, prs)
+	result1, ok, err := client.Issues.ListIssueLinkingPullRequests(context.Background(), owner, repo, number)
+	assert.Nil(t, err)
+	assert.True(t, ok)
 	for i := range *prs {
 		d1, _ := json.Marshal(*(*prs)[i])
-		d2, _ := json.Marshal(*result[i])
+		d2, _ := json.Marshal(*result1[i])
 		assert.Equal(t, d1, d2)
 	}
 }

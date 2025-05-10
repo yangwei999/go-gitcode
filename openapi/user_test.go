@@ -15,26 +15,27 @@ package openapi
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/stretchr/testify/assert"
-	"net/http"
 	"testing"
 )
 
-func TestGetUserInfo(t *testing.T) {
+func TestUser(t *testing.T) {
 
 	client, mux, _ := mockServer(t)
 
 	want := new(User)
 	_ = readTestdata(t, userTestDataDir+"user.json", want)
-
-	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set(headerContentTypeName, headerContentTypeJsonValue)
-		_ = json.NewEncoder(w).Encode(want)
-	})
+	mockResponse(t, mux, "/user", want)
 
 	got, ok, err := client.User.GetUserInfo(context.Background())
-	assert.Equal(t, nil, err)
-	assert.Equal(t, true, ok)
+	assert.Nil(t, err)
+	assert.True(t, ok)
+	assert.Equal(t, *want, *got)
+
+	username := "user4"
+	mockResponse(t, mux, "/users/"+username, want)
+	got, ok, err = client.User.GetUserInfoByUsername(context.Background(), username)
+	assert.Nil(t, err)
+	assert.True(t, ok)
 	assert.Equal(t, *want, *got)
 }

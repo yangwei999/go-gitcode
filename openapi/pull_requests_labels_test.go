@@ -15,71 +15,52 @@ package openapi
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"net/http"
+	"strings"
 	"testing"
 )
 
-func TestAddLabelsToPullRequest(t *testing.T) {
-
+func TestPullRequestsLabels(t *testing.T) {
 	client, mux, _ := mockServer(t)
-
-	want := new([]*Label)
-	_ = readTestdata(t, prTestDataDir+"pull_requests_add_labels.json", want)
-
-	mux.HandleFunc(prefixUrlPath+owner+"/"+repo+"/pulls/33/labels", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set(headerContentTypeName, headerContentTypeJsonValue)
-		_ = json.NewEncoder(w).Encode(want)
-	})
-
-	ctx := context.Background()
-	got, ok, err := client.PullRequests.AddLabelsToPullRequest(ctx, owner, repo, "33", []string{"fa", "fsw"})
-	assert.Equal(t, nil, err)
-	assert.Equal(t, true, ok)
-
-	d1, _ := json.Marshal(want)
-	d2, _ := json.Marshal(got)
-	assert.Equal(t, d1, d2)
+	addOrGetPRLabels(t, client, mux)
+	removePRLabel(t, client, mux)
 }
 
-func TestRemoveLabelsFromPullRequest(t *testing.T) {
+func addOrGetPRLabels(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
-	client, mux, _ := mockServer(t)
+	var want []*Label
+	_ = readTestdata(t, prTestDataDir+"pull_requests_add_labels.json", &want)
+	urlStr := fmt.Sprintf("/repos/%s/%s/pulls/%s/labels", owner, repo, number)
+	mockResponse(t, mux, urlStr, want)
 
-	mux.HandleFunc(prefixUrlPath+owner+"/"+repo+"/pulls/34/labels/fa,fsw", func(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	got, ok, err := client.PullRequests.AddLabelsToPullRequest(ctx, owner, repo, number, []string{"fa", "fsw"})
+	assert.Nil(t, err)
+	assert.True(t, ok)
+	for i := range want {
+		assert.Equal(t, *want[i], *got[i])
+	}
+
+	got, ok, err = client.PullRequests.GetLabelsOfPullRequest(context.Background(), owner, repo, number)
+	assert.Nil(t, err)
+	assert.True(t, ok)
+	for i := range want {
+		assert.Equal(t, *want[i], *got[i])
+	}
+}
+
+func removePRLabel(t *testing.T, client *APIClient, mux *http.ServeMux) {
+	delLabels := []string{"fa", "fsw"}
+	urlStr := fmt.Sprintf("/repos/%s/%s/pulls/%s/labels/%s", owner, repo, number, strings.Join(delLabels, ","))
+	mux.HandleFunc(urlStr, func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set(headerContentTypeName, headerContentTypeJsonValue)
 		w.WriteHeader(http.StatusNoContent)
 	})
 
 	ctx := context.Background()
-	ok, err := client.PullRequests.RemoveLabelsFromPullRequest(ctx, owner, repo, "34", []string{"fa", "fsw"})
-	assert.Equal(t, nil, err)
-	assert.Equal(t, true, ok)
-}
-
-func TestGetLabelsOfPullRequest(t *testing.T) {
-
-	client, mux, _ := mockServer(t)
-
-	var labels []*Label
-	_ = readTestdata(t, prTestDataDir+"pull_requests_add_labels.json", &labels)
-
-	mux.HandleFunc(prefixUrlPath+owner+"/"+repo+"/pulls/4432/labels", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set(headerContentTypeName, headerContentTypeJsonValue)
-		err := json.NewEncoder(w).Encode(labels)
-		if err != nil {
-			t.Errorf("PR.GetLabelsOfPullRequest mock response data error: %v", err)
-		}
-	})
-
-	result, ok, err := client.PullRequests.GetLabelsOfPullRequest(context.Background(), owner, repo, "4432")
-	if err != nil {
-		t.Errorf("PR.GetLabelsOfPullRequest returned error: %v", err)
-	}
-	assert.Equal(t, true, ok)
-	for i := range labels {
-		assert.Equal(t, *labels[i], *result[i])
-	}
-
+	ok, err := client.PullRequests.RemoveLabelsFromPullRequest(ctx, owner, repo, number, delLabels)
+	assert.Nil(t, err)
+	assert.True(t, ok)
 }

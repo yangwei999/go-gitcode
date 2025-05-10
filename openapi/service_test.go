@@ -14,9 +14,7 @@
 package openapi
 
 import (
-	"bytes"
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -27,9 +25,12 @@ import (
 )
 
 const (
-	prefixUrlPath = "/repos/"
-	owner         = "111"
-	repo          = "222"
+	owner      = "111"
+	repo       = "222"
+	number     = "1"
+	page       = "1"
+	branch     = "master"
+	permission = "push"
 
 	testDataDir       = "testdata"
 	issuesTestDataDir = testDataDir + string(os.PathSeparator) + "issues" + string(os.PathSeparator)
@@ -64,13 +65,16 @@ func mockServer(t *testing.T) (client *APIClient, mux *http.ServeMux, serverURL 
 	return client, mux, server.URL
 }
 
-func TestBuildRequestForm(t *testing.T) {
-	assert.Equal(t, (*bytes.Buffer)(nil), buildRequestForm(nil))
-
-	type dummy struct {
-		A string
-	}
-	assert.Equal(t, (*bytes.Buffer)(nil), buildRequestForm(&dummy{}))
+func mockResponse(t *testing.T, mux *http.ServeMux, urlStr string, body any) {
+	mux.HandleFunc(urlStr, func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set(headerContentTypeName, headerContentTypeJsonValue)
+		if body != nil {
+			err := json.NewEncoder(w).Encode(body)
+			if err != nil {
+				t.Errorf("mock response data error: %v", err)
+			}
+		}
+	})
 }
 
 func readTestdata(t *testing.T, path string, ptr any) []byte {

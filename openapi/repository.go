@@ -101,31 +101,31 @@ func (s *RepositoryService) DeleteOrgRepo(ctx context.Context, owner, repo strin
 	return successModified(resp), err
 }
 
-// GetRepoPermissionModel 获取项目的权限模式
+// GetRepoPermissionMode 获取项目的权限模式
 //
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-transition
-func (s *RepositoryService) GetRepoPermissionModel(ctx context.Context, owner, repo string) (*RepositoryPermissionModel, bool, error) {
+func (s *RepositoryService) GetRepoPermissionMode(ctx context.Context, owner, repo string) (*RepositoryPermissionMode, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/transition", owner, repo)
 	req, err := newRequest(s.api, http.MethodGet, urlStr, nil)
 	if err != nil {
 		return nil, false, err
 	}
 
-	model := new(RepositoryPermissionModel)
-	resp, err := s.api.Do(ctx, req, model)
-	return model, successGetData(resp), err
+	mode := new(RepositoryPermissionMode)
+	resp, err := s.api.Do(ctx, req, mode)
+	return mode, successGetData(resp), err
 }
 
-// UpdateRepoPermissionModel 更新仓库的权限模式
+// UpdateRepoPermissionMode 更新仓库的权限模式
 //
 // api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-transition
-func (s *RepositoryService) UpdateRepoPermissionModel(ctx context.Context, owner, repo, model string) (bool, error) {
+func (s *RepositoryService) UpdateRepoPermissionMode(ctx context.Context, owner, repo, mode string) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/transition", owner, repo)
-	m, err := strconv.Atoi(model)
+	m, err := strconv.Atoi(mode)
 	if err != nil {
 		return false, err
 	}
-	req, err := newRequest(s.api, http.MethodPut, urlStr, RepositoryPermissionModel{
+	req, err := newRequest(s.api, http.MethodPut, urlStr, RepositoryPermissionModeRequest{
 		Model: m,
 	})
 	if err != nil {
