@@ -96,7 +96,7 @@ func TestListPullRequestLinkingIssues(t *testing.T) {
 	})
 
 	ctx := context.Background()
-	got, ok, err := client.PullRequests.ListPullRequestLinkingIssues(ctx, owner, repo, "15")
+	got, ok, err := client.PullRequests.ListPullRequestLinkingIssues(ctx, owner, repo, "15", "1")
 	assert.Equal(t, nil, err)
 	assert.Equal(t, true, ok)
 

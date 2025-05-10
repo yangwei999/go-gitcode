@@ -18,11 +18,12 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 // GetRepoContributors 获取仓库贡献者
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/#9-%e8%8e%b7%e5%8f%96%e4%bb%93%e5%ba%93%e8%b4%a1%e7%8c%ae%e8%80%85
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-contributors
 func (s *RepositoryService) GetRepoContributors(ctx context.Context, owner, repo, category string) ([]*Contributor, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/contributors", owner, repo)
 	var query url.Values
@@ -42,7 +43,7 @@ func (s *RepositoryService) GetRepoContributors(ctx context.Context, owner, repo
 
 // GetRepoContentByPath 获取仓库具体路径下的内容
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/#2-%e8%8e%b7%e5%8f%96%e4%bb%93%e5%ba%93%e5%85%b7%e4%bd%93%e8%b7%af%e5%be%84%e4%b8%8b%e7%9a%84%e5%86%85%e5%ae%b9
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-contents-path
 func (s *RepositoryService) GetRepoContentByPath(ctx context.Context, owner, repo, path, ref string) (*RepositoryContent, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/contents/%s?ref=%s", owner, repo, path, ref)
 	req, err := newRequest(s.api, http.MethodGet, urlStr, nil)
@@ -53,4 +54,131 @@ func (s *RepositoryService) GetRepoContentByPath(ctx context.Context, owner, rep
 	content := new(RepositoryContent)
 	resp, err := s.api.Do(ctx, req, content)
 	return content, successGetData(resp), err
+}
+
+// CreateOrgRepo 创建组织仓库
+//
+// api Docs: https://docs.gitcode.com/docs/apis/post-api-v-5-orgs-org-repos
+func (s *RepositoryService) CreateOrgRepo(ctx context.Context, owner string, repoContent *RepositoryRequest) (*Repository, bool, error) {
+	urlStr := fmt.Sprintf("orgs/%s/repos", owner)
+	req, err := newRequest(s.api, http.MethodPost, urlStr, repoContent)
+	if err != nil {
+		return nil, false, err
+	}
+
+	repo := new(Repository)
+	resp, err := s.api.Do(ctx, req, repo)
+	return repo, successCreated(resp), err
+}
+
+// ListOrgRepo 获取组织项目列表
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-orgs-org-repos
+func (s *RepositoryService) ListOrgRepo(ctx context.Context, owner, repoType, page string) ([]*Repository, bool, error) {
+	urlStr := fmt.Sprintf("orgs/%s/repos", owner)
+	req, err := newRequest(s.api, http.MethodGet, urlStr,
+		&url.Values{"page": []string{page}, "per_page": []string{"100"}, "type": []string{repoType}}, RequestHandler{t: Query})
+	if err != nil {
+		return nil, false, err
+	}
+
+	var repos []*Repository
+	resp, err := s.api.Do(ctx, req, &repos)
+	return repos, successGetData(resp), err
+}
+
+// DeleteOrgRepo 删除一个仓库
+//
+// api Docs: https://docs.gitcode.com/docs/apis/delete-api-v-5-repos-owner-repo
+func (s *RepositoryService) DeleteOrgRepo(ctx context.Context, owner, repo string) (bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s", owner, repo)
+	req, err := newRequest(s.api, http.MethodDelete, urlStr, nil)
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := s.api.Do(ctx, req, nil)
+	return successModified(resp), err
+}
+
+// GetRepoPermissionModel 获取项目的权限模式
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-transition
+func (s *RepositoryService) GetRepoPermissionModel(ctx context.Context, owner, repo string) (*RepositoryPermissionModel, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/transition", owner, repo)
+	req, err := newRequest(s.api, http.MethodGet, urlStr, nil)
+	if err != nil {
+		return nil, false, err
+	}
+
+	model := new(RepositoryPermissionModel)
+	resp, err := s.api.Do(ctx, req, model)
+	return model, successGetData(resp), err
+}
+
+// UpdateRepoPermissionModel 更新仓库的权限模式
+//
+// api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-transition
+func (s *RepositoryService) UpdateRepoPermissionModel(ctx context.Context, owner, repo, model string) (bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/transition", owner, repo)
+	m, err := strconv.Atoi(model)
+	if err != nil {
+		return false, err
+	}
+	req, err := newRequest(s.api, http.MethodPut, urlStr, RepositoryPermissionModel{
+		Model: m,
+	})
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := s.api.Do(ctx, req, nil)
+	return successModified(resp), err
+}
+
+// GetRepoCustomRoles 获取项目自定义角色
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-customized-roles
+func (s *RepositoryService) GetRepoCustomRoles(ctx context.Context, owner, repo string) ([]*CustomRepoRoles, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/customized_roles", owner, repo)
+	req, err := newRequest(s.api, http.MethodGet, urlStr, nil)
+	if err != nil {
+		return nil, false, err
+	}
+
+	var roles []*CustomRepoRoles
+	resp, err := s.api.Do(ctx, req, &roles)
+	return roles, successGetData(resp), err
+}
+
+// GetRepoTrees 获取仓库目录Tree
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-git-trees-sha
+func (s *RepositoryService) GetRepoTrees(ctx context.Context, owner, repo, sha, page, recursive string) (*RepositoryTree, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/git/trees/%s", owner, repo, sha)
+	req, err := newRequest(s.api, http.MethodGet, urlStr,
+		&url.Values{"page": []string{page}, "per_page": []string{"100"}, "recursive": []string{recursive}}, RequestHandler{t: Query})
+	if err != nil {
+		return nil, false, err
+	}
+
+	trees := new(RepositoryTree)
+	resp, err := s.api.Do(ctx, req, &trees)
+	return trees, successGetData(resp), err
+}
+
+// GetRepoFileList 获取文件列表
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-file-list
+func (s *RepositoryService) GetRepoFileList(ctx context.Context, owner, repo, refName, fileName string) ([]string, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/file_list", owner, repo)
+	req, err := newRequest(s.api, http.MethodGet, urlStr,
+		&url.Values{"ref_name": []string{refName}, "file_name": []string{url.QueryEscape(fileName)}}, RequestHandler{t: Query})
+	if err != nil {
+		return nil, false, err
+	}
+
+	var fileList []string
+	resp, err := s.api.Do(ctx, req, &fileList)
+	return fileList, successGetData(resp), err
 }

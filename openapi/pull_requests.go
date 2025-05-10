@@ -22,7 +22,7 @@ import (
 
 // GetPullRequest 获取单个Pull Requests
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/pulls/#10-%e8%8e%b7%e5%8f%96%e5%8d%95%e4%b8%aapull-request
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number
 func (s *PullRequestsService) GetPullRequest(ctx context.Context, owner, repo, number string) (*PullRequest, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s", owner, repo, number)
 	req, err := newRequest(s.api, http.MethodGet, urlStr, nil)
@@ -37,7 +37,7 @@ func (s *PullRequestsService) GetPullRequest(ctx context.Context, owner, repo, n
 
 // UpdatePullRequest 更新Pull Request信息
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/pulls/#8-%e6%9b%b4%e6%96%b0pull-request%e4%bf%a1%e6%81%af
+// api Docs: https://docs.gitcode.com/docs/apis/patch-api-v-5-repos-owner-repo-pulls-number
 func (s *PullRequestsService) UpdatePullRequest(ctx context.Context, owner, repo, number string, prContent *PullRequestRequest) (*PullRequest, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s", owner, repo, number)
 	req, err := newRequest(s.api, http.MethodPatch, urlStr, prContent)
@@ -52,10 +52,11 @@ func (s *PullRequestsService) UpdatePullRequest(ctx context.Context, owner, repo
 
 // ListPullRequestLinkingIssues 获取pr关联的issue
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/pulls/#3-%e8%8e%b7%e5%8f%96pr%e5%85%b3%e8%81%94%e7%9a%84issue
-func (s *PullRequestsService) ListPullRequestLinkingIssues(ctx context.Context, owner, repo, number string) ([]*Issue, bool, error) {
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-issues
+func (s *PullRequestsService) ListPullRequestLinkingIssues(ctx context.Context, owner, repo, number, page string) ([]*Issue, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/issues", owner, repo, number)
-	req, err := newRequest(s.api, http.MethodGet, urlStr, nil)
+	req, err := newRequest(s.api, http.MethodGet, urlStr,
+		&url.Values{"page": []string{page}, "per_page": []string{"100"}}, RequestHandler{t: Query})
 	if err != nil {
 		return nil, false, err
 	}
@@ -67,7 +68,7 @@ func (s *PullRequestsService) ListPullRequestLinkingIssues(ctx context.Context, 
 
 // ListPullRequestCommits 获取某Pull Request的所有Commit信息
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/pulls/#10-%e8%8e%b7%e5%8f%96%e6%9f%90pull-request%e7%9a%84%e6%89%80%e6%9c%89commit%e4%bf%a1%e6%81%af
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-commits
 func (s *PullRequestsService) ListPullRequestCommits(ctx context.Context, owner, repo, number string) ([]*RepositoryCommit, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/commits", owner, repo, number)
 	req, err := newRequest(s.api, http.MethodGet, urlStr, nil)
@@ -82,7 +83,7 @@ func (s *PullRequestsService) ListPullRequestCommits(ctx context.Context, owner,
 
 // GetPullRequestChangeFiles Pull Request Commit文件列表
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/pulls/#5-pull-request-commit%e6%96%87%e4%bb%b6%e5%88%97%e8%a1%a8
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-files
 func (s *PullRequestsService) GetPullRequestChangeFiles(ctx context.Context, owner, repo, number string) ([]*CommitFile, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/files", owner, repo, number)
 	req, err := newRequest(s.api, http.MethodGet, urlStr, nil)
@@ -97,7 +98,7 @@ func (s *PullRequestsService) GetPullRequestChangeFiles(ctx context.Context, own
 
 // MergePullRequest 合并Pull Request
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/pulls/#2-%e5%90%88%e5%b9%b6pull-request
+// api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-pulls-number-merge
 func (s *PullRequestsService) MergePullRequest(ctx context.Context, owner, repo, number, mergeMethod string) (*PullRequestMergedResult, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/merge", owner, repo, number)
 	req, err := newRequest(s.api, http.MethodPut, urlStr, &PullRequestRequestMerge{
@@ -114,7 +115,7 @@ func (s *PullRequestsService) MergePullRequest(ctx context.Context, owner, repo,
 
 // ListPullRequestOperationLogs 获取某个Pull Request的操作日志
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/pulls/#15-%e8%8e%b7%e5%8f%96%e6%9f%90%e4%b8%aapull-request%e7%9a%84%e6%93%8d%e4%bd%9c%e6%97%a5%e5%bf%97
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-operate-logs
 func (s *PullRequestsService) ListPullRequestOperationLogs(ctx context.Context, owner, repo, number, sort, page string) ([]*PullRequestOperationLog, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/operate_logs", owner, repo, number)
 	req, err := newRequest(s.api, http.MethodGet, urlStr,

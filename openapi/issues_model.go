@@ -52,6 +52,7 @@ type Issue struct {
 	ClosedBy         *User             `json:"closed_by,omitempty"`
 
 	PullRequestLinks *PullRequestLinks `json:"pull_request,omitempty"`
+	Milestone        *Milestone        `json:"milestone,omitempty"`
 }
 
 type IssueStateDetail struct {

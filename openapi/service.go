@@ -120,3 +120,5 @@ type PullRequestsService service
 type RepositoryService service
 
 type UserService service
+
+type OrganizationService service

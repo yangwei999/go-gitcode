@@ -91,7 +91,7 @@ func TestNewRequestError(t *testing.T) {
 	assert.Equal(t, false, ok)
 	assert.Equal(t, (*PullRequest)(nil), result5)
 	assert.Equal(t, msg1, err.Error())
-	result6, ok, err := client.PullRequests.ListPullRequestLinkingIssues(context.Background(), owner, repo, "1")
+	result6, ok, err := client.PullRequests.ListPullRequestLinkingIssues(context.Background(), owner, repo, "1", "1")
 	assert.Equal(t, false, ok)
 	assert.Equal(t, ([]*Issue)(nil), result6)
 	assert.Equal(t, msg1, err.Error())
