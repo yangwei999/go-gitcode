@@ -27,6 +27,7 @@ type User struct {
 	Following   *int        `json:"following,omitempty"`
 	Type        *string     `json:"type,omitempty"`
 	Permission  *string     `json:"permission,omitempty"`
+	RoleId      *string     `json:"role_id,omitempty"`
 	Permissions *Permission `json:"permissions,omitempty"`
 }
 

@@ -39,23 +39,24 @@ type PullRequest struct {
 	Head *PullRequestBranch `json:"head,omitempty"`
 	Base *PullRequestBranch `json:"base,omitempty"`
 
-	URL                 *string `json:"url,omitempty"`
-	HTMLURL             *string `json:"html_url,omitempty"`
-	IssueURL            *string `json:"issue_url,omitempty"`
-	StatusesURL         *string `json:"statuses_url,omitempty"`
-	DiffURL             *string `json:"diff_url,omitempty"`
-	PatchURL            *string `json:"patch_url,omitempty"`
-	CommitsURL          *string `json:"commits_url,omitempty"`
-	CommentsURL         *string `json:"comments_url,omitempty"`
-	ReviewCommentsURL   *string `json:"review_comments_url,omitempty"`
-	ReviewCommentURL    *string `json:"review_comment_url,omitempty"`
-	ReviewComments      *int    `json:"review_comments,omitempty"`
-	Assignee            *User   `json:"assignee,omitempty"`
-	Assignees           []*User `json:"assignees,omitempty"`
-	MaintainerCanModify *bool   `json:"maintainer_can_modify,omitempty"`
-	AuthorAssociation   *string `json:"author_association,omitempty"`
-	NodeID              *string `json:"node_id,omitempty"`
-	RequestedReviewers  []*User `json:"requested_reviewers,omitempty"`
+	URL                 *string    `json:"url,omitempty"`
+	HTMLURL             *string    `json:"html_url,omitempty"`
+	IssueURL            *string    `json:"issue_url,omitempty"`
+	StatusesURL         *string    `json:"statuses_url,omitempty"`
+	DiffURL             *string    `json:"diff_url,omitempty"`
+	PatchURL            *string    `json:"patch_url,omitempty"`
+	CommitsURL          *string    `json:"commits_url,omitempty"`
+	CommentsURL         *string    `json:"comments_url,omitempty"`
+	ReviewCommentsURL   *string    `json:"review_comments_url,omitempty"`
+	ReviewCommentURL    *string    `json:"review_comment_url,omitempty"`
+	ReviewComments      *int       `json:"review_comments,omitempty"`
+	Assignee            *User      `json:"assignee,omitempty"`
+	Assignees           []*User    `json:"assignees,omitempty"`
+	MaintainerCanModify *bool      `json:"maintainer_can_modify,omitempty"`
+	AuthorAssociation   *string    `json:"author_association,omitempty"`
+	NodeID              *string    `json:"node_id,omitempty"`
+	RequestedReviewers  []*User    `json:"requested_reviewers,omitempty"`
+	Milestone           *Milestone `json:"milestone,omitempty"`
 }
 
 // PullRequestBranch represents a base or head branch in a GitHub pull request.

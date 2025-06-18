@@ -44,11 +44,12 @@ type Attributes struct {
 }
 
 type IssuePart struct {
-	Action *string       `json:"action,omitempty"`
-	State  *string       `json:"state,omitempty"`
-	Number *int          `json:"iid,omitempty"`
-	Author *openapi.User `json:"author,omitempty"`
-	ID     *json.Number  `json:"id,omitempty"`
+	Action         *string       `json:"action,omitempty"`
+	State          *string       `json:"state,omitempty"`
+	Number         *int          `json:"iid,omitempty"`
+	Author         *openapi.User `json:"author,omitempty"`
+	ID             *json.Number  `json:"id,omitempty"`
+	AssigneeIDList []*int64      `json:"assignee_ids,omitempty"`
 }
 
 type IssueEvent struct {

@@ -22,7 +22,7 @@ import (
 
 // ListRepoIssueLabels 获取仓库所有任务标签
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/labels/#2-%e8%8e%b7%e5%8f%96%e4%bb%93%e5%ba%93%e6%89%80%e6%9c%89%e4%bb%bb%e5%8a%a1%e6%a0%87%e7%ad%be
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-labels
 func (s *IssuesService) ListRepoIssueLabels(ctx context.Context, owner, repo string) ([]*Label, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/labels", owner, repo)
 	req, err := newRequest(s.api, http.MethodGet, urlStr, nil)
@@ -37,7 +37,7 @@ func (s *IssuesService) ListRepoIssueLabels(ctx context.Context, owner, repo str
 
 // CreateRepoIssueLabel 创建仓库任务标签
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/labels/#3-%e5%88%9b%e5%bb%ba%e4%bb%93%e5%ba%93%e4%bb%bb%e5%8a%a1%e6%a0%87%e7%ad%be
+// api Docs: https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-labels
 func (s *IssuesService) CreateRepoIssueLabel(ctx context.Context, owner, repo string, newLabel *Label) (*Label, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/labels", owner, repo)
 	req, err := newRequest(s.api, http.MethodPost, urlStr, newLabel, RequestHandler{t: Form})
@@ -52,7 +52,7 @@ func (s *IssuesService) CreateRepoIssueLabel(ctx context.Context, owner, repo st
 
 // UpdateRepoIssueLabel 更新一个仓库的任务标签
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/labels/#1-%e6%9b%b4%e6%96%b0%e4%b8%80%e4%b8%aa%e4%bb%93%e5%ba%93%e7%9a%84%e4%bb%bb%e5%8a%a1%e6%a0%87%e7%ad%be
+// api Docs: https://docs.gitcode.com/docs/apis/patch-api-v-5-repos-owner-repo-labels-original-name
 func (s *IssuesService) UpdateRepoIssueLabel(ctx context.Context, owner, repo, originalName, newName, color string) (*Label, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/labels/%s", owner, repo, originalName)
 	req, err := newRequest(s.api, http.MethodPatch, urlStr, &url.Values{"name": []string{newName}, "color": []string{color}}, RequestHandler{t: Form})
@@ -67,7 +67,7 @@ func (s *IssuesService) UpdateRepoIssueLabel(ctx context.Context, owner, repo, o
 
 // DeleteRepoIssueLabel 删除一个仓库任务标签
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/labels/#4-%e5%88%a0%e9%99%a4%e4%b8%80%e4%b8%aa%e4%bb%93%e5%ba%93%e4%bb%bb%e5%8a%a1%e6%a0%87%e7%ad%be
+// api Docs: https://docs.gitcode.com/docs/apis/delete-api-v-5-repos-owner-repo-labels-name
 func (s *IssuesService) DeleteRepoIssueLabel(ctx context.Context, owner, repo, name string) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/labels/%s", owner, repo, name)
 	req, err := newRequest(s.api, http.MethodDelete, urlStr, nil)
@@ -80,7 +80,7 @@ func (s *IssuesService) DeleteRepoIssueLabel(ctx context.Context, owner, repo, n
 
 // AddLabelsToIssue 创建Issue标签
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/issues/#9%e5%88%9b%e5%bb%baissue%e6%a0%87%e7%ad%be
+// api Docs: https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-issues-number-labels
 func (s *IssuesService) AddLabelsToIssue(ctx context.Context, owner, repo, number string, labelNameList []string) ([]*Label, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/issues/%s/labels", owner, repo, number)
 	req, err := newRequest(s.api, http.MethodPost, urlStr, labelNameList)
@@ -95,7 +95,7 @@ func (s *IssuesService) AddLabelsToIssue(ctx context.Context, owner, repo, numbe
 
 // RemoveLabelsFromIssue 删除Issue标签
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/issues/#10%e5%88%a0%e9%99%a4issue%e6%a0%87%e7%ad%be
+// api Docs: https://docs.gitcode.com/docs/apis/delete-api-v-5-repos-owner-repo-issues-number-labels-name
 func (s *IssuesService) RemoveLabelsFromIssue(ctx context.Context, owner, repo, number, label string) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/issues/%s/labels/%s", owner, repo, number, label)
 	req, err := newRequest(s.api, http.MethodDelete, urlStr, nil)
@@ -109,7 +109,7 @@ func (s *IssuesService) RemoveLabelsFromIssue(ctx context.Context, owner, repo, 
 
 // GetIssueLabels 获取企业某个Issue所有标签
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/repos/issues/#8%e8%8e%b7%e5%8f%96%e4%bc%81%e4%b8%9a%e6%9f%90%e4%b8%aaissue%e6%89%80%e6%9c%89%e6%a0%87%e7%ad%be
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-enterprises-enterprise-issues-issue-id-labels
 func (s *IssuesService) GetIssueLabels(ctx context.Context, owner, issueID, page string) ([]*Label, bool, error) {
 	urlStr := fmt.Sprintf("enterprises/%s/issues/%s/labels", owner, issueID)
 	req, err := newRequest(s.api, http.MethodGet, urlStr,

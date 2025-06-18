@@ -20,9 +20,23 @@ import (
 
 // GetUserInfo 获取授权用户的资料
 //
-// api Docs: https://docs.gitcode.com/docs/openapi/users/#2-%e8%8e%b7%e5%8f%96%e6%8e%88%e6%9d%83%e7%94%a8%e6%88%b7%e7%9a%84%e8%b5%84%e6%96%99
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-user
 func (s *UserService) GetUserInfo(ctx context.Context) (*User, bool, error) {
 	req, err := newRequest(s.api, http.MethodGet, "user", nil)
+	if err != nil {
+		return nil, false, err
+	}
+
+	userInfo := new(User)
+	resp, err := s.api.Do(ctx, req, userInfo)
+	return userInfo, successGetData(resp), err
+}
+
+// GetUserInfoByUsername 获取一个用户
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-users-username
+func (s *UserService) GetUserInfoByUsername(ctx context.Context, username string) (*User, bool, error) {
+	req, err := newRequest(s.api, http.MethodGet, "users/"+username, nil)
 	if err != nil {
 		return nil, false, err
 	}

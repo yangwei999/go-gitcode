@@ -22,7 +22,7 @@ type Timestamp time.Time
 // UnmarshalJSON implements the json.Unmarshaler interface.
 // Time is expected in RFC3339 or Unix format.
 func (t *Timestamp) UnmarshalJSON(data []byte) error {
-	if len(data) == 2 {
+	if len(data) <= len(time.RFC3339) {
 		*t = Timestamp(time.Time{})
 		return nil
 	}
@@ -50,4 +50,11 @@ func (t *Timestamp) ToString() *string {
 		return &s
 	}
 	return nil
+}
+
+func (t *Timestamp) ToTime() time.Time {
+	if t == nil {
+		return time.Time{}
+	}
+	return time.Time(*t)
 }
