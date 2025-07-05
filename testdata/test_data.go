@@ -24,7 +24,6 @@ import (
 const (
 	dir                       = string(os.PathSeparator) + "testdata" + string(os.PathSeparator)
 	issue                     = dir + string(os.PathSeparator) + "issues" + string(os.PathSeparator)
-	IssueAddLabels            = issue + "issues_add_labels.json"
 	IssuesAddLabels           = issue + "issues_add_labels.json"
 	IssuesComment             = issue + "issues_comment.json"
 	IssuesCreateLabel         = issue + "issues_create_label.json"
