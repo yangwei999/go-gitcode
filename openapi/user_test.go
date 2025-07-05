@@ -15,6 +15,7 @@ package openapi
 
 import (
 	"context"
+	"github.com/opensourceways/go-gitcode/testdata"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -24,7 +25,7 @@ func TestUser(t *testing.T) {
 	client, mux, _ := mockServer(t)
 
 	want := new(User)
-	_ = readTestdata(t, userTestDataDir+"user.json", want)
+	_ = testdata.ReadTestData(t, testdata.User, want)
 	mockResponse(t, mux, "/user", want)
 
 	got, ok, err := client.User.GetUserInfo(context.Background())

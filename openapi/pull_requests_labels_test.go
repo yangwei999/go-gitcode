@@ -16,6 +16,7 @@ package openapi
 import (
 	"context"
 	"fmt"
+	"github.com/opensourceways/go-gitcode/testdata"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"strings"
@@ -31,7 +32,7 @@ func TestPullRequestsLabels(t *testing.T) {
 func addOrGetPRLabels(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 	var want []*Label
-	_ = readTestdata(t, prTestDataDir+"pull_requests_add_labels.json", &want)
+	_ = testdata.ReadTestData(t, testdata.PullRequestsAddLabels, &want)
 	urlStr := fmt.Sprintf("/repos/%s/%s/pulls/%s/labels", owner, repo, number)
 	mockResponse(t, mux, urlStr, want)
 

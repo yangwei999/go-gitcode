@@ -17,6 +17,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/opensourceways/go-gitcode/testdata"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
@@ -37,7 +38,7 @@ func TestPullRequests(t *testing.T) {
 func getPR(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 	want := new(PullRequest)
-	_ = readTestdata(t, prTestDataDir+"pull_requests.json", want)
+	_ = testdata.ReadTestData(t, testdata.PullRequests, want)
 
 	urlStr := fmt.Sprintf("/repos/%s/%s/pulls/%s", owner, repo, number)
 	mockResponse(t, mux, urlStr, want)
@@ -54,7 +55,7 @@ func getPR(t *testing.T, client *APIClient, mux *http.ServeMux) {
 func updatePR(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 	want := new(PullRequest)
-	_ = readTestdata(t, prTestDataDir+"pull_requests_closed.json", want)
+	_ = testdata.ReadTestData(t, testdata.PullRequestsClosed, want)
 	number1 := "12"
 	urlStr := fmt.Sprintf("/repos/%s/%s/pulls/%s", owner, repo, number1)
 	mockResponse(t, mux, urlStr, want)
@@ -69,7 +70,7 @@ func updatePR(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	assert.Equal(t, d1, d2)
 
 	want1 := new(PullRequest)
-	_ = readTestdata(t, prTestDataDir+"pull_requests_open.json", want1)
+	_ = testdata.ReadTestData(t, testdata.PullRequestsOpen, want1)
 	number1 = "13"
 	urlStr = fmt.Sprintf("/repos/%s/%s/pulls/%s", owner, repo, number1)
 	mockResponse(t, mux, urlStr, want1)
@@ -87,7 +88,7 @@ func updatePR(t *testing.T, client *APIClient, mux *http.ServeMux) {
 func listPRLinkingIssues(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 	want := new([]*Issue)
-	_ = readTestdata(t, prTestDataDir+"pull_requests_linking_issues.json", want)
+	_ = testdata.ReadTestData(t, testdata.PullRequestsLinkingIssues, want)
 	urlStr := fmt.Sprintf("/repos/%s/%s/pulls/%s/issues", owner, repo, number)
 	mockResponse(t, mux, urlStr, want)
 
@@ -105,7 +106,7 @@ func listPRLinkingIssues(t *testing.T, client *APIClient, mux *http.ServeMux) {
 func getAllPRCommits(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 	want := new([]*RepositoryCommit)
-	_ = readTestdata(t, prTestDataDir+"pull_requests_commits.json", want)
+	_ = testdata.ReadTestData(t, testdata.PullRequestsCommits, want)
 	urlStr := fmt.Sprintf("/repos/%s/%s/pulls/%s/commits", owner, repo, number)
 	mockResponse(t, mux, urlStr, want)
 
@@ -124,7 +125,7 @@ func getAllPRCommits(t *testing.T, client *APIClient, mux *http.ServeMux) {
 func getPRChangeFiles(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 	want := new([]*CommitFile)
-	_ = readTestdata(t, prTestDataDir+"pull_requests_files.json", want)
+	_ = testdata.ReadTestData(t, testdata.PullRequestsFiles, want)
 	urlStr := fmt.Sprintf("/repos/%s/%s/pulls/%s/files", owner, repo, number)
 	mockResponse(t, mux, urlStr, want)
 
@@ -142,7 +143,7 @@ func getPRChangeFiles(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 func getPROperationLogs(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	want := new([]*PullRequestOperationLog)
-	_ = readTestdata(t, prTestDataDir+"pull_requests_files.json", want)
+	_ = testdata.ReadTestData(t, testdata.PullRequestsOperateLog, want)
 	urlStr := fmt.Sprintf("/repos/%s/%s/pulls/%s/operate_logs", owner, repo, number)
 	mockResponse(t, mux, urlStr, want)
 
@@ -161,7 +162,7 @@ func getPROperationLogs(t *testing.T, client *APIClient, mux *http.ServeMux) {
 func mergePR(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 	want := new(PullRequestMergedResult)
-	_ = readTestdata(t, prTestDataDir+"pull_requests_merge.json", want)
+	_ = testdata.ReadTestData(t, testdata.PullRequestsMerge, want)
 	urlStr := fmt.Sprintf("/repos/%s/%s/pulls/%s/merge", owner, repo, number)
 	mockResponse(t, mux, urlStr, want)
 

@@ -17,6 +17,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/opensourceways/go-gitcode/testdata"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
@@ -26,7 +27,7 @@ func TestIssues(t *testing.T) {
 	client, mux, _ := mockServer(t)
 
 	var want Issue
-	_ = readTestdata(t, issuesTestDataDir+"issues_update.json", &want)
+	_ = testdata.ReadTestData(t, testdata.IssuesUpdate, &want)
 
 	createIssue(t, client, mux, want)
 	getIssue(t, client, mux, want)
@@ -82,7 +83,7 @@ func updateIssue(t *testing.T, client *APIClient, mux *http.ServeMux, want Issue
 
 func getLinkedPR(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	prs := new([]*PullRequest)
-	_ = readTestdata(t, issuesTestDataDir+"issues_linking_prs.json", prs)
+	_ = testdata.ReadTestData(t, testdata.IssuesLinkingPrs, prs)
 	urlStr := fmt.Sprintf("/repos/%s/%s/issues/%s/pull_requests", owner, repo, number)
 	mockResponse(t, mux, urlStr, prs)
 	result1, ok, err := client.Issues.ListIssueLinkingPullRequests(context.Background(), owner, repo, number)

@@ -17,6 +17,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/opensourceways/go-gitcode/testdata"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
@@ -34,7 +35,7 @@ func TestPullRequestsComments(t *testing.T) {
 func createPRComments(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 	want := new(SimpleComment)
-	_ = readTestdata(t, prTestDataDir+"pull_requests_create_comment.json", want)
+	_ = testdata.ReadTestData(t, testdata.PullRequestsCreateComment, want)
 	urlStr := fmt.Sprintf("/repos/%s/%s/pulls/%s/comments", owner, repo, number)
 	mockResponse(t, mux, urlStr, want)
 
@@ -51,7 +52,7 @@ func createPRComments(t *testing.T, client *APIClient, mux *http.ServeMux) {
 func getPRComments(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 	want := new([]*PullRequestComment)
-	_ = readTestdata(t, prTestDataDir+"pull_requests_comments.json", want)
+	_ = testdata.ReadTestData(t, testdata.PullRequestsComments, want)
 	number := "5"
 	urlStr := fmt.Sprintf("/repos/%s/%s/pulls/%s/comments", owner, repo, number)
 	mockResponse(t, mux, urlStr, want)

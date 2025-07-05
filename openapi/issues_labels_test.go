@@ -17,6 +17,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/opensourceways/go-gitcode/testdata"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
@@ -40,9 +41,9 @@ func TestIssuesLabels(t *testing.T) {
 func listOrCreateLabel(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 	var allLabels []*Label
-	_ = readTestdata(t, issuesTestDataDir+"issues_list_labels.json", &allLabels)
+	_ = testdata.ReadTestData(t, testdata.IssuesListLabels, &allLabels)
 	var addLabel Label
-	_ = readTestdata(t, issuesTestDataDir+"issues_create_label.json", &addLabel)
+	_ = testdata.ReadTestData(t, testdata.IssuesCreateLabel, &addLabel)
 	urlStr := fmt.Sprintf("/repos/%s/%s/labels", owner, repo)
 	mux.HandleFunc(urlStr, func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set(headerContentTypeName, headerContentTypeJsonValue)
@@ -85,7 +86,7 @@ func listOrCreateLabel(t *testing.T, client *APIClient, mux *http.ServeMux) {
 func updateOrDeleteLabel(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 	var want Label
-	_ = readTestdata(t, issuesTestDataDir+"issues_create_label.json", &want)
+	_ = testdata.ReadTestData(t, testdata.IssuesCreateLabel, &want)
 	oldLabelName := "gfa"
 	urlStr := fmt.Sprintf("/repos/%s/%s/labels/%s", owner, repo, oldLabelName)
 	mockResponse(t, mux, urlStr, want)
@@ -99,7 +100,7 @@ func updateOrDeleteLabel(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	assert.Nil(t, err)
 	assert.True(t, ok)
 
-	data := readTestdata(t, issuesTestDataDir+"issues_delete_label_failed.json", nil)
+	data := testdata.ReadTestData(t, testdata.IssuesDeleteLabelFailed, nil)
 	labelName := "canNotDeleteLabel"
 	urlStr = fmt.Sprintf("/repos/%s/%s/labels/%s", owner, repo, labelName)
 	mux.HandleFunc(urlStr, func(w http.ResponseWriter, r *http.Request) {
@@ -115,7 +116,7 @@ func updateOrDeleteLabel(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 func addIssueLabel(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	var want []*Label
-	_ = readTestdata(t, issuesTestDataDir+"issues_add_labels.json", &want)
+	_ = testdata.ReadTestData(t, testdata.IssuesAddLabels, &want)
 	labelName := "add-issue-label"
 	urlStr := fmt.Sprintf("/repos/%s/%s/issues/%s/labels", owner, repo, number)
 	mux.HandleFunc(urlStr, func(w http.ResponseWriter, r *http.Request) {
@@ -152,7 +153,7 @@ func removeIssueLabel(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 func getIssueLabels(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	var labels []*Label
-	_ = readTestdata(t, issuesTestDataDir+"issues_having_labels.json", &labels)
+	_ = testdata.ReadTestData(t, testdata.IssuesHavingLabels, &labels)
 	issueID := "5342"
 	urlStr := fmt.Sprintf("/enterprises/%s/issues/%s/labels", owner, issueID)
 	mockResponse(t, mux, urlStr, labels)

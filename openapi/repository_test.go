@@ -17,6 +17,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/opensourceways/go-gitcode/testdata"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
@@ -38,7 +39,7 @@ func TestRepository(t *testing.T) {
 func getRepoContributors(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 	var want []*Contributor
-	_ = readTestdata(t, reposTestDataDir+"repository_contributors.json", &want)
+	_ = testdata.ReadTestData(t, testdata.RepositoryContributors, &want)
 	urlStr := fmt.Sprintf("/repos/%s/%s/contributors", owner, repo)
 	category := "authors"
 	mux.HandleFunc(urlStr, func(w http.ResponseWriter, r *http.Request) {
@@ -58,7 +59,7 @@ func getRepoContributors(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 func getRepoContentByPath(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	want := new(RepositoryContent)
-	_ = readTestdata(t, reposTestDataDir+"repository_file_content.json", want)
+	_ = testdata.ReadTestData(t, testdata.RepositoryFileContent, want)
 	filePath := "2.txt"
 	branch := "master"
 	urlStr := fmt.Sprintf("/repos/%s/%s/contents/%s", owner, repo, filePath)
@@ -77,7 +78,7 @@ func getRepoContentByPath(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 func createOrGetRepo(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	want := new(Repository)
-	_ = readTestdata(t, reposTestDataDir+"repository_create.json", want)
+	_ = testdata.ReadTestData(t, testdata.RepositoryCreate, want)
 	urlStr := fmt.Sprintf("/orgs/%s/repos", owner)
 	mux.HandleFunc(urlStr, func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set(headerContentTypeName, headerContentTypeJsonValue)
@@ -141,7 +142,7 @@ func getOrUpdateRepoMode(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 func getRepoCustomRoles(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	var want []*CustomRepoRoles
-	_ = readTestdata(t, reposTestDataDir+"repository_custom_roles.json", &want)
+	_ = testdata.ReadTestData(t, testdata.RepositoryCustomRoles, &want)
 	urlStr := fmt.Sprintf("/repos/%s/%s/customized_roles", owner, repo)
 	mockResponse(t, mux, urlStr, want)
 
@@ -156,7 +157,7 @@ func getRepoCustomRoles(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 func getRepoTree(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	var want RepositoryTree
-	_ = readTestdata(t, reposTestDataDir+"repository_tree.json", &want)
+	_ = testdata.ReadTestData(t, testdata.RepositoryTree, &want)
 	branch := "dev"
 	urlStr := fmt.Sprintf("/repos/%s/%s/git/trees/%s", owner, repo, branch)
 	mockResponse(t, mux, urlStr, want)

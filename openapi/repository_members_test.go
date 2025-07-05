@@ -16,6 +16,7 @@ package openapi
 import (
 	"context"
 	"fmt"
+	"github.com/opensourceways/go-gitcode/testdata"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
@@ -31,7 +32,7 @@ func TestRepositoryMembers(t *testing.T) {
 
 func getRepoAllMember(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	var want []*User
-	_ = readTestdata(t, reposTestDataDir+"repository_members.json", &want)
+	_ = testdata.ReadTestData(t, testdata.RepositoryMembers, &want)
 	urlStr := fmt.Sprintf("/repos/%s/%s/collaborators", owner, repo)
 	mockResponse(t, mux, urlStr, want)
 

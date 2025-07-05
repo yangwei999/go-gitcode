@@ -16,6 +16,7 @@ package openapi
 import (
 	"context"
 	"fmt"
+	"github.com/opensourceways/go-gitcode/testdata"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -25,7 +26,7 @@ func TestIssueComments(t *testing.T) {
 	client, mux, _ := mockServer(t)
 
 	var want IssueComment
-	_ = readTestdata(t, issuesTestDataDir+"issues_comment.json", &want)
+	_ = testdata.ReadTestData(t, testdata.IssuesComment, &want)
 
 	// CreateIssueComment
 	urlStr := fmt.Sprintf("/repos/%s/%s/issues/%s/comments", owner, repo, number)

@@ -18,9 +18,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"os"
-	"path/filepath"
-	"runtime"
 	"testing"
 )
 
@@ -31,12 +28,6 @@ const (
 	page       = "1"
 	branch     = "master"
 	permission = "push"
-
-	testDataDir       = "testdata"
-	issuesTestDataDir = testDataDir + string(os.PathSeparator) + "issues" + string(os.PathSeparator)
-	prTestDataDir     = testDataDir + string(os.PathSeparator) + "pr" + string(os.PathSeparator)
-	reposTestDataDir  = testDataDir + string(os.PathSeparator) + "repos" + string(os.PathSeparator)
-	userTestDataDir   = testDataDir + string(os.PathSeparator) + "user" + string(os.PathSeparator)
 )
 
 // setup sets up a test HTTP server along with a github.api that is
@@ -75,39 +66,4 @@ func mockResponse(t *testing.T, mux *http.ServeMux, urlStr string, body any) {
 			}
 		}
 	})
-}
-
-func readTestdata(t *testing.T, path string, ptr any) []byte {
-
-	i := 0
-retry:
-	absPath, err := filepath.Abs(path)
-	if err != nil {
-		t.Error(path + " not found")
-		return nil
-	}
-	if _, err = os.Stat(absPath); !os.IsNotExist(err) {
-		data, err := os.ReadFile(absPath)
-		if err != nil {
-			t.Error(path + " read failed")
-			return nil
-		}
-		if ptr != nil {
-			err = json.Unmarshal(data, ptr)
-			if err != nil {
-				_, _, line, _ := runtime.Caller(1)
-				t.Errorf("code line: %d, error: %v", line, err)
-			}
-		}
-		return data
-	} else {
-		i++
-		path = ".." + string(os.PathSeparator) + path
-		if i <= 3 {
-			goto retry
-		}
-	}
-
-	t.Error(path + " not found")
-	return nil
 }
