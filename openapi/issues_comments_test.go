@@ -15,35 +15,28 @@ package openapi
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
+	"github.com/opensourceways/go-gitcode/testdata"
 	"github.com/stretchr/testify/assert"
-	"net/http"
 	"testing"
 )
 
-func TestCreateIssueComment(t *testing.T) {
+func TestIssueComments(t *testing.T) {
 
 	client, mux, _ := mockServer(t)
 
-	var comments IssueComment
-	_ = readTestdata(t, issuesTestDataDir+"issues_comment.json", &comments)
+	var want IssueComment
+	_ = testdata.ReadTestData(t, testdata.IssuesComment, &want)
 
-	mux.HandleFunc(prefixUrlPath+owner+"/"+repo+"/issues/1/comments", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set(headerContentTypeName, headerContentTypeJsonValue)
-		err := json.NewEncoder(w).Encode(comments)
-		if err != nil {
-			t.Errorf("Issues.CreateIssueComment mock response data error: %v", err)
-		}
-	})
-
+	// CreateIssueComment
+	urlStr := fmt.Sprintf("/repos/%s/%s/issues/%s/comments", owner, repo, number)
+	mockResponse(t, mux, urlStr, want)
 	comment := "123987u41"
-	result, ok, err := client.Issues.CreateIssueComment(context.Background(), owner, repo, "1", &IssueComment{
+	got, ok, err := client.Issues.CreateIssueComment(context.Background(), owner, repo, "1", &IssueComment{
 		Body: &comment,
 	})
-	if err != nil {
-		t.Errorf("Issues.CreateIssueComment returned error: %v", err)
-	}
-	assert.Equal(t, true, ok)
-	assert.Equal(t, comments, *result)
+	assert.Nil(t, err)
+	assert.True(t, ok)
+	assert.Equal(t, want, *got)
 
 }

@@ -48,7 +48,8 @@ func (s *RepositoryService) GetRepoMemberPermission(ctx context.Context, owner, 
 
 	user := new(User)
 	resp, err := s.api.Do(ctx, req, user)
-	return user, [2]bool{successModified(resp), resp != nil && resp.StatusCode == http.StatusNotFound}, err
+	respNormal := resp != nil && (resp.StatusCode == http.StatusNotFound || resp.StatusCode == http.StatusNoContent)
+	return user, [2]bool{successModified(resp), respNormal}, err
 }
 
 // CheckUserIsRepoMember 判断用户是否为仓库成员
@@ -62,13 +63,14 @@ func (s *RepositoryService) CheckUserIsRepoMember(ctx context.Context, owner, re
 	}
 
 	resp, err := s.api.Do(ctx, req, nil)
-	return successModified(resp), resp != nil && resp.StatusCode == http.StatusNotFound, err
+	respNormal := resp != nil && (resp.StatusCode == http.StatusNotFound || resp.StatusCode == http.StatusNoContent)
+	return successModified(resp), respNormal, err
 }
 
 // AddRepoMember 添加项目成员或更新项目成员权限
 //
 // api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-collaborators-username
-func (s *PullRequestsService) AddRepoMember(ctx context.Context, owner, repo, username, permission string) (bool, error) {
+func (s *RepositoryService) AddRepoMember(ctx context.Context, owner, repo, username, permission string) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/collaborators/%s", owner, repo, username)
 	req, err := newRequest(s.api, http.MethodPut, urlStr, &User{Permission: &permission})
 	if err != nil {
@@ -82,7 +84,7 @@ func (s *PullRequestsService) AddRepoMember(ctx context.Context, owner, repo, us
 // RemoveRepoMember 移除项目成员
 //
 // api Docs: https://docs.gitcode.com/docs/apis/delete-api-v-5-repos-owner-repo-collaborators-username
-func (s *PullRequestsService) RemoveRepoMember(ctx context.Context, owner, repo, username string) (bool, error) {
+func (s *RepositoryService) RemoveRepoMember(ctx context.Context, owner, repo, username string) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/collaborators/%s", owner, repo, username)
 	req, err := newRequest(s.api, http.MethodDelete, urlStr, nil)
 	if err != nil {

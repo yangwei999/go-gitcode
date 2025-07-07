@@ -1,0 +1,24 @@
+{
+  "id": -64,
+  "full_name": "ibforuorg/test1231",
+  "human_name": "ibforuorg / test1231",
+  "url": "https://api.gitcode.com/api/v5/repos/ibforuorg/test1231",
+  "namespace": {
+    "id": -42,
+    "name": "ibforuorg",
+    "path": "ibforuorg",
+    "develop_mode": "normal",
+    "cell": "default",
+    "kind": "group",
+    "full_path": "ibforuorg",
+    "full_name": "ibforuorg",
+    "visibility_level": 20,
+    "enable_file_control": false
+  },
+  "path": "test1231",
+  "name": "test1231",
+  "description": "test1231",
+  "private": false,
+  "public": true,
+  "visibility": "public"
+}

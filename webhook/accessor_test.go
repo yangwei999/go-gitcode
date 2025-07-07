@@ -16,19 +16,16 @@ package webhook
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/opensourceways/go-gitcode/testdata"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
-	"os"
-	"path/filepath"
 	"reflect"
-	"runtime"
 	"testing"
 )
 
 const (
-	webhookTestDataDir = "testdata" + string(os.PathSeparator) + "webhook" + string(os.PathSeparator)
-	htmlUrl            = "https://gitcode.com/ibforuorg/test1/issues/4"
+	htmlUrl = "https://gitcode.com/ibforuorg/test1/issues/4"
 )
 
 func TestGetAccessor(t *testing.T) {
@@ -55,7 +52,7 @@ func TestGetAccessor(t *testing.T) {
 
 func createIssue(t *testing.T) {
 	want := GitCodeAccessor{Issues: new(IssueEvent)}
-	data := readWebHookTestdata(t, webhookTestDataDir+"issues_create.json", want.Issues)
+	data := testdata.ReadTestData(t, testdata.IssuesCreate, want.Issues)
 
 	buf := &bytes.Buffer{}
 	buf.Write(data)
@@ -98,7 +95,7 @@ func createIssue(t *testing.T) {
 
 func pushCode(t *testing.T) {
 	want := GitCodeAccessor{Push: new(PushEvent)}
-	data := readWebHookTestdata(t, webhookTestDataDir+"push_code.json", want.Push)
+	data := testdata.ReadTestData(t, testdata.PushCode, want.Push)
 
 	buf := &bytes.Buffer{}
 	buf.Write(data)
@@ -137,7 +134,7 @@ func pushCode(t *testing.T) {
 
 func createPR(t *testing.T) {
 	want := GitCodeAccessor{PR: new(PullRequestEvent)}
-	data := readWebHookTestdata(t, webhookTestDataDir+"pr_create.json", want.PR)
+	data := testdata.ReadTestData(t, testdata.PrCreate, want.PR)
 
 	buf := &bytes.Buffer{}
 	buf.Write(data)
@@ -182,7 +179,7 @@ func createPR(t *testing.T) {
 
 func notePR(t *testing.T) {
 	want := GitCodeAccessor{Note: new(NoteEvent)}
-	data := readWebHookTestdata(t, webhookTestDataDir+"pr_note.json", want.Note)
+	data := testdata.ReadTestData(t, testdata.PrNote, want.Note)
 
 	buf := &bytes.Buffer{}
 	buf.Write(data)
@@ -222,7 +219,7 @@ func notePR(t *testing.T) {
 
 func noteIssue(t *testing.T) {
 	want := GitCodeAccessor{Note: new(NoteEvent)}
-	data := readWebHookTestdata(t, webhookTestDataDir+"issues_note.json", want.Note)
+	data := testdata.ReadTestData(t, testdata.IssuesNote, want.Note)
 
 	buf := &bytes.Buffer{}
 	buf.Write(data)
@@ -267,39 +264,4 @@ func noteIssue(t *testing.T) {
 		ret := rm.Func.Call([]reflect.Value{reflect.ValueOf(note)})
 		assert.Equal(t, (*string)(nil), ret[0].Interface())
 	}
-}
-
-func readWebHookTestdata(t *testing.T, path string, ptr any) []byte {
-
-	i := 0
-retry:
-	absPath, err := filepath.Abs(path)
-	if err != nil {
-		t.Error(path + " not found")
-		return nil
-	}
-	if _, err = os.Stat(absPath); !os.IsNotExist(err) {
-		data, err := os.ReadFile(absPath)
-		if err != nil {
-			t.Error(path + " read failed")
-			return nil
-		}
-		if ptr != nil {
-			err = json.Unmarshal(data, ptr)
-			if err != nil {
-				_, _, line, _ := runtime.Caller(1)
-				t.Errorf("code line: %d, error: %v", line, err)
-			}
-		}
-		return data
-	} else {
-		i++
-		path = ".." + string(os.PathSeparator) + path
-		if i <= 3 {
-			goto retry
-		}
-	}
-
-	t.Error(path + " not found")
-	return nil
 }

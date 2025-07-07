@@ -16,26 +16,20 @@ package openapi
 // Repository represents a GitHub repository.
 type Repository struct {
 	ID                 *int64        `json:"id,omitempty"`
-	NodeID             *string       `json:"node_id,omitempty"`
-	Owner              *User         `json:"owner,omitempty"`
 	Name               *string       `json:"name,omitempty"`
 	Path               *string       `json:"path,omitempty"`
 	FullName           *string       `json:"full_name,omitempty"`
 	Description        *string       `json:"description,omitempty"`
 	Homepage           *string       `json:"homepage,omitempty"`
 	DefaultBranch      *string       `json:"default_branch,omitempty"`
-	MasterBranch       *string       `json:"master_branch,omitempty"`
 	CreatedAt          *Timestamp    `json:"created_at,omitempty"`
 	PushedAt           *Timestamp    `json:"pushed_at,omitempty"`
 	UpdatedAt          *Timestamp    `json:"updated_at,omitempty"`
 	HTMLURL            *string       `json:"html_url,omitempty"`
-	CloneURL           *string       `json:"clone_url,omitempty"`
-	GitURL             *string       `json:"git_url,omitempty"`
 	MirrorURL          *string       `json:"mirror_url,omitempty"`
-	SSHURL             *string       `json:"ssh_url,omitempty"`
-	SVNURL             *string       `json:"svn_url,omitempty"`
 	Language           *string       `json:"language,omitempty"`
 	Status             *string       `json:"status,omitempty"`
+	Internal           *bool         `json:"internal,omitempty"`
 	Fork               *bool         `json:"fork,omitempty"`
 	ForksCount         *int          `json:"forks_count,omitempty"`
 	NetworkCount       *int          `json:"network_count,omitempty"`
@@ -53,7 +47,7 @@ type Repository struct {
 	Archived           *bool         `json:"archived,omitempty"`
 
 	// Additional mutable fields when creating and editing a repository
-	Public            *bool   `json:"disabled,omitempty"`
+	Public            *bool   `json:"public,omitempty"`
 	Private           *bool   `json:"private,omitempty"`
 	HasIssues         *bool   `json:"has_issues,omitempty"`
 	HasWiki           *bool   `json:"has_wiki,omitempty"`
@@ -177,14 +171,20 @@ type RepositoryRequest struct {
 	HasWiki           *bool   `json:"has_wiki,omitempty"`
 	AutoInit          *bool   `json:"auto_init,omitempty"`
 	Private           *bool   `json:"private,omitempty"`
+	Public            *int    `json:"public,omitempty"`
+	DefaultBranch     *string `json:"default_branch,omitempty"`
 	LicenseTemplate   *string `json:"license_template,omitempty"`
 	GitignoreTemplate *string `json:"gitignore_template,omitempty"`
 	Path              *string `json:"path,omitempty"`
 	ImportUrl         *string `json:"import_url,omitempty"`
 }
 
-type RepositoryPermissionModel struct {
+type RepositoryPermissionMode struct {
 	Model int `json:"memberMgntMode,omitempty"`
+}
+
+type RepositoryPermissionModeRequest struct {
+	Model int `json:"mode,omitempty"`
 }
 
 type RepositoryMemberPermission struct {

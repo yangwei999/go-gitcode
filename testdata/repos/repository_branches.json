@@ -1,0 +1,44 @@
+[
+  {
+    "name": "master",
+    "commit": {
+      "commit": {
+        "author": {
+          "name": "opengauss_bot",
+          "date": "2025-05-10T15:33:00+08:00",
+          "email": "****da@das.com"
+        },
+        "committer": {
+          "name": "opengauss_bot",
+          "date": "2025-05-10T15:33:00+08:00",
+          "email": "****da@das.com"
+        },
+        "message": "merge master into master"
+      },
+      "sha": "398e60a1bd16d896fe77b4e17475da9e754aabd4",
+      "url": "https://gitcode.com/api/v5/repos/opengauss/openGauss-server/commits/398e60a1bd16d896fe77b4e17475da9e754aabd4"
+    },
+    "protected": true
+  },
+  {
+    "name": "5.0.0",
+    "commit": {
+      "commit": {
+        "author": {
+          "name": "opengauss_bot",
+          "date": "2025-05-08T16:46:42+08:00",
+          "email": "****da@das.com"
+        },
+        "committer": {
+          "name": "opengauss_bot",
+          "date": "2025-05-08T16:46:42+08:00",
+          "email": "****da@das.com"
+        },
+        "message": "merge 5052 into 5.0.0"
+      },
+      "sha": "a27721ecd307ad3d9b623ee251b35304e5bf4705",
+      "url": "https://gitcode.com/api/v5/repos/opengauss/openGauss-server/commits/a27721ecd307ad3d9b623ee251b35304e5bf4705"
+    },
+    "protected": true
+  }
+]
