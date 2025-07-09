@@ -54,11 +54,10 @@ func TestDo(t *testing.T) {
 	api := &APIClient{}
 	result, err := api.Do(context.Background(), httptest.NewRequest(http.MethodPost, "http://localhost:8080/2", nil), struct{}{})
 	assert.Equal(t, (*http.Response)(nil), result)
-	assert.Equal(t, respReceiverNotAnPointerError, err)
+	assert.Equal(t, errorRespReceiverNotAnPointer, err)
 
-	var receiver any
-	receiver = new(Issue)
+	receiver := new(Issue)
 	result, err = api.Do(nil, httptest.NewRequest(http.MethodPost, "http://localhost:8080/2", nil), receiver)
 	assert.Nil(t, result)
-	assert.Equal(t, nilContentError, err)
+	assert.Equal(t, errorContentIsNil, err)
 }

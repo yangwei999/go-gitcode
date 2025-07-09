@@ -50,7 +50,7 @@ func listOrCreateLabel(t *testing.T, client *APIClient, mux *http.ServeMux) {
 		var err error
 		if r.Method == http.MethodGet {
 			err = json.NewEncoder(w).Encode(allLabels)
-		} else if r.Method == http.MethodPost {
+		} else {
 			err = json.NewEncoder(w).Encode(addLabel)
 		}
 		if err != nil {

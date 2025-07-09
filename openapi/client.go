@@ -129,7 +129,7 @@ func newRequest(c *APIClient, method, urlStr string, body any, handlers ...Reque
 func (c *APIClient) Do(ctx context.Context, req *http.Request, receiver any) (*http.Response, error) {
 
 	if receiver != nil && reflect.TypeOf(receiver).Kind() != reflect.Pointer {
-		return nil, respReceiverNotAnPointerError
+		return nil, errorRespReceiverNotAnPointer
 	}
 
 	var resp *http.Response
@@ -208,7 +208,7 @@ func successModified(resp *http.Response) bool {
 
 func (c *APIClient) BareDo(ctx context.Context, req *http.Request) (*http.Response, error) {
 	if ctx == nil {
-		return nil, nilContentError
+		return nil, errorContentIsNil
 	}
 	req = req.WithContext(ctx)
 

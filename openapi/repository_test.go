@@ -86,7 +86,7 @@ func createOrGetRepo(t *testing.T, client *APIClient, mux *http.ServeMux) {
 		w.Header().Set(headerContentTypeName, headerContentTypeJsonValue)
 		if r.Method == http.MethodPost {
 			_ = json.NewEncoder(w).Encode(want)
-		} else if r.Method == http.MethodGet {
+		} else {
 			_ = json.NewEncoder(w).Encode([]Repository{*want})
 		}
 

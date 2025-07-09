@@ -43,11 +43,10 @@ const (
 	HeaderEventGUID  = "X-GitCode-Delivery"
 	HeaderEventToken = "X-GitCode-Signature-256"
 
-	// error message constants
-	ErrorMessageEvent                       = "Missing X-GitCode-Event Header"
-	ErrorMessageEmptyToken                  = "Missing X-GitCode-Signature-256"
-	ErrorMessageInvalidToken                = "Invalid X-GitCode-Signature-256"
-	ErrorMessageInvalidAuthenticationObject = "Invalid Authentication"
+	ErrorMessageEvent                       = "missing X-GitCode-Event"
+	ErrorMessageEmptyToken                  = "missing X-GitCode-Signature-256"
+	ErrorMessageInvalidToken                = "invalid X-GitCode-Signature-256"
+	ErrorMessageInvalidAuthenticationObject = "invalid Authentication"
 )
 
 func (a *GitCodeAuthentication) Auth(w http.ResponseWriter, r *http.Request) error {
