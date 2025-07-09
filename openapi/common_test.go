@@ -220,8 +220,17 @@ func TestNewRequestError(t *testing.T) {
 	ok, err = client.Repository.RemoveRepoBranchProtectedRule(context.Background(), owner, repo, branch)
 	compare(t, ok, err, mockErr, nil)
 
+	ok, err = client.Repository.UpdateRepoPullRequestSetting(context.Background(), owner, repo)
+	compare(t, ok, err, mockErr, nil)
+
+	ok, err = client.Repository.UpdateRepoSetting(context.Background(), owner, repo)
+	compare(t, ok, err, mockErr, nil)
+
 	var time1 *Timestamp
-	assert.True(t, time1.ToTime() == time.Time{})
+	assert.True(t, time.Time{}.Equal(time1.ToTime()))
+
+	result34, ok, err := client.Issues.ListIssueComments(context.Background(), owner, repo, number, page, "desc", "")
+	compare(t, ok, err, mockErr, result34)
 }
 
 func compare(t *testing.T, ok bool, err, mock error, result any) {

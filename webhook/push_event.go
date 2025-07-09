@@ -91,3 +91,10 @@ func (p *PushEvent) GetCreateTime() *string {
 func (p *PushEvent) GetUpdateTime() *string {
 	return nil
 }
+
+func (p *PushEvent) GetRepoVisibility() *string {
+	if p.Repository == nil {
+		return nil
+	}
+	return Visibility(p.Repository.Visibility)
+}

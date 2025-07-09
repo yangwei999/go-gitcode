@@ -17,6 +17,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 // CreateIssueComment 创建Issue评论
@@ -32,4 +33,20 @@ func (s *IssuesService) CreateIssueComment(ctx context.Context, owner, repo, num
 	addedComment := new(IssueComment)
 	resp, err := s.api.Do(ctx, req, addedComment)
 	return addedComment, successCreated(resp), err
+}
+
+// ListIssueComments 获取仓库某个Issue所有的评论
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-issues-number-comments
+func (s *IssuesService) ListIssueComments(ctx context.Context, owner, repo, number, page, order, since string) ([]*IssueComment, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/issues/%s/comments", owner, repo, number)
+	req, err := newRequest(s.api, http.MethodGet, urlStr,
+		&url.Values{"page": []string{page}, "per_page": []string{"100"}, "order": []string{order}, "since": []string{since}}, RequestHandler{t: Query})
+	if err != nil {
+		return nil, false, err
+	}
+
+	var comments []*IssueComment
+	resp, err := s.api.Do(ctx, req, &comments)
+	return comments, successGetData(resp), err
 }

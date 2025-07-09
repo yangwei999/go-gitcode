@@ -218,3 +218,17 @@ type RepositoryTree struct {
 	Sha  *string              `json:"sha,omitempty"`
 	Tree []*RepositoryContent `json:"tree,omitempty"`
 }
+
+type RepositoryRepoPullRequestSettingRequest struct {
+	DisableMergeBySelf    bool `json:"disable_merge_by_self,omitempty"`
+	AddNotesAfterMerged   bool `json:"add_notes_after_merged,omitempty"`
+	CanReopen             bool `json:"can_reopen,omitempty"`
+	AllowLiteMergeRequest bool `json:"is_allow_lite_merge_request,omitempty"`
+}
+
+type RepositoryRepoSettingRequest struct {
+	GeneratePreMergeRef            bool `json:"generate_pre_merge_ref,omitempty"`
+	ForbiddenCommitterCreateBranch bool `json:"forbidden_committer_create_branch,omitempty"`
+	ForbiddenDeveloperCreateBranch bool `json:"forbidden_developer_create_branch,omitempty"`
+	ForbiddenDeveloperCreateTag    bool `json:"forbidden_developer_create_tag,omitempty"`
+}

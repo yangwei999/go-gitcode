@@ -30,6 +30,7 @@ const (
 	IssuesDeleteLabelFailed   = issue + "issues_delete_label_failed.json"
 	IssuesHavingLabels        = issue + "issues_having_labels.json"
 	IssuesLinkingPrs          = issue + "issues_linking_prs.json"
+	IssuesListComments        = issue + "issues_list_comments.json"
 	IssuesListLabels          = issue + "issues_list_labels.json"
 	IssuesUpdate              = issue + "issues_update.json"
 	pr                        = dir + string(os.PathSeparator) + "pr" + string(os.PathSeparator)

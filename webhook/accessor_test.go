@@ -18,8 +18,8 @@ import (
 	"encoding/json"
 	"github.com/opensourceways/go-gitcode/testdata"
 	"github.com/stretchr/testify/assert"
+	"io"
 	"net/http"
-	"net/http/httptest"
 	"reflect"
 	"testing"
 )
@@ -39,15 +39,28 @@ func TestGetAccessor(t *testing.T) {
 	buf := &bytes.Buffer{}
 	buf.Write([]byte("kjhygadsskhj"))
 	req, _ := http.NewRequest(http.MethodPost, "http://localhost:8080/11", buf)
-	req.Header.Set(headerEventType, "Dummy Hook")
-	req.Header.Set(headerEventGUID, "fasgasd")
-	w := httptest.NewRecorder()
+	req.Header.Set(HeaderEventType, "Dummy Hook")
+	req.Header.Set(HeaderEventGUID, "fasgasd")
 
 	a := new(GitCodeAccessor)
-	got1, _, got2, got3 := a.GetAccessor(w, req)
+	getPayload(t, a, req)
+	got1, got2, got3 := a.GetAccessor(req)
 	assert.Equal(t, nil, got1)
 	assert.Equal(t, "Dummy Hook", *got2)
 	assert.Equal(t, "fasgasd", *got3)
+
+	a1 := new(GitCodeAccessor)
+	got1, got2, got3 = a1.GetAccessor(req)
+	assert.Nil(t, got1)
+	assert.Nil(t, got2)
+	assert.Nil(t, got3)
+}
+
+func getPayload(t *testing.T, a *GitCodeAccessor, r *http.Request) {
+	var payload bytes.Buffer
+	_, err := io.Copy(&payload, r.Body)
+	assert.Nil(t, err)
+	a.Payload = &payload
 }
 
 func createIssue(t *testing.T) {
@@ -57,12 +70,12 @@ func createIssue(t *testing.T) {
 	buf := &bytes.Buffer{}
 	buf.Write(data)
 	req, _ := http.NewRequest(http.MethodPost, "http://localhost:8080/0", buf)
-	req.Header.Set(headerEventType, issueEvent)
-	req.Header.Set(headerEventGUID, "1231321")
-	w := httptest.NewRecorder()
+	req.Header.Set(HeaderEventType, issueEvent)
+	req.Header.Set(HeaderEventGUID, "1231321")
 
 	a := new(GitCodeAccessor)
-	got1, _, got2, got3 := a.GetAccessor(w, req)
+	getPayload(t, a, req)
+	got1, got2, got3 := a.GetAccessor(req)
 	d1, _ := json.Marshal(want.Issues)
 	d2, _ := json.Marshal(got1)
 	assert.Equal(t, d1, d2)
@@ -82,6 +95,7 @@ func createIssue(t *testing.T) {
 	assert.Equal(t, "*****", *issue.GetAuthor())
 	assert.Equal(t, "2024-10-26T10:28:03+08:00", *issue.GetCreateTime())
 	assert.Equal(t, "2024-10-26T10:28:03+08:00", *issue.GetUpdateTime())
+	assert.Equal(t, "public", *issue.GetRepoVisibility())
 
 	issue = new(IssueEvent)
 	rt := reflect.TypeOf(issue)
@@ -100,12 +114,12 @@ func pushCode(t *testing.T) {
 	buf := &bytes.Buffer{}
 	buf.Write(data)
 	req, _ := http.NewRequest(http.MethodPost, "http://localhost:8080/1", buf)
-	req.Header.Set(headerEventType, "Push Hook")
-	req.Header.Set(headerEventGUID, "fasgasd")
-	w := httptest.NewRecorder()
+	req.Header.Set(HeaderEventType, "Push Hook")
+	req.Header.Set(HeaderEventGUID, "fasgasd")
 
 	a := new(GitCodeAccessor)
-	got1, _, got2, got3 := a.GetAccessor(w, req)
+	getPayload(t, a, req)
+	got1, got2, got3 := a.GetAccessor(req)
 	d1, _ := json.Marshal(want.Push)
 	d2, _ := json.Marshal(got1)
 	assert.Equal(t, d1, d2)
@@ -121,6 +135,7 @@ func pushCode(t *testing.T) {
 	assert.Equal(t, "https://gitcode.com/ibforuorg/org-repo-role-member-manage", *pr.GetHtmlURL())
 	assert.Equal(t, "dev", *pr.GetBase())
 	assert.Equal(t, "ibforu", *pr.GetAuthor())
+	assert.Nil(t, pr.GetRepoVisibility())
 
 	pr = new(PushEvent)
 	rt := reflect.TypeOf(pr)
@@ -139,12 +154,12 @@ func createPR(t *testing.T) {
 	buf := &bytes.Buffer{}
 	buf.Write(data)
 	req, _ := http.NewRequest(http.MethodPost, "http://localhost:8080/2", buf)
-	req.Header.Set(headerEventType, pullRequestEvent)
-	req.Header.Set(headerEventGUID, "fasgasd")
-	w := httptest.NewRecorder()
+	req.Header.Set(HeaderEventType, pullRequestEvent)
+	req.Header.Set(HeaderEventGUID, "fasgasd")
 
 	a := new(GitCodeAccessor)
-	got1, _, got2, got3 := a.GetAccessor(w, req)
+	getPayload(t, a, req)
+	got1, got2, got3 := a.GetAccessor(req)
 	d1, _ := json.Marshal(want.PR)
 	d2, _ := json.Marshal(got1)
 	assert.Equal(t, d1, d2)
@@ -166,6 +181,7 @@ func createPR(t *testing.T) {
 	assert.Equal(t, "****", *pr.GetAuthor())
 	assert.Equal(t, "2024-10-26T10:32:40+08:00", *pr.GetCreateTime())
 	assert.Equal(t, "2024-10-26T10:32:41+08:00", *pr.GetUpdateTime())
+	assert.Equal(t, "private", *pr.GetRepoVisibility())
 
 	pr = new(PullRequestEvent)
 	rt := reflect.TypeOf(pr)
@@ -184,12 +200,12 @@ func notePR(t *testing.T) {
 	buf := &bytes.Buffer{}
 	buf.Write(data)
 	req, _ := http.NewRequest(http.MethodPost, "http://localhost:8080/21", buf)
-	req.Header.Set(headerEventType, noteEvent)
-	req.Header.Set(headerEventGUID, "651234123")
-	w := httptest.NewRecorder()
+	req.Header.Set(HeaderEventType, noteEvent)
+	req.Header.Set(HeaderEventGUID, "651234123")
 
 	a := new(GitCodeAccessor)
-	got1, _, got2, got3 := a.GetAccessor(w, req)
+	getPayload(t, a, req)
+	got1, got2, got3 := a.GetAccessor(req)
 	d1, _ := json.Marshal(want.Note)
 	d2, _ := json.Marshal(got1)
 	assert.Equal(t, d1, d2)
@@ -215,6 +231,7 @@ func notePR(t *testing.T) {
 	assert.Equal(t, "****", *note.GetCommenter())
 	assert.Equal(t, "2024-10-26T11:44:15+08:00", *note.GetCreateTime())
 	assert.Equal(t, "2024-10-26T11:44:15+08:00", *note.GetUpdateTime())
+	assert.Equal(t, "public", *note.GetRepoVisibility())
 }
 
 func noteIssue(t *testing.T) {
@@ -224,12 +241,12 @@ func noteIssue(t *testing.T) {
 	buf := &bytes.Buffer{}
 	buf.Write(data)
 	req, _ := http.NewRequest(http.MethodPost, "http://localhost:8080/26", buf)
-	req.Header.Set(headerEventType, noteEvent)
-	req.Header.Set(headerEventGUID, "151231321")
-	w := httptest.NewRecorder()
+	req.Header.Set(HeaderEventType, noteEvent)
+	req.Header.Set(HeaderEventGUID, "151231321")
 
 	a := new(GitCodeAccessor)
-	got1, _, got2, got3 := a.GetAccessor(w, req)
+	getPayload(t, a, req)
+	got1, got2, got3 := a.GetAccessor(req)
 	d1, _ := json.Marshal(want.Note)
 	d2, _ := json.Marshal(got1)
 	assert.Equal(t, d1, d2)
@@ -255,6 +272,7 @@ func noteIssue(t *testing.T) {
 	assert.Equal(t, "****", *note.GetCommenter())
 	assert.Equal(t, "2024-10-26T11:42:05+08:00", *note.GetCreateTime())
 	assert.Equal(t, "2024-10-26T11:42:05+08:00", *note.GetUpdateTime())
+	assert.Equal(t, "private", *note.GetRepoVisibility())
 
 	note = new(NoteEvent)
 	rt := reflect.TypeOf(note)

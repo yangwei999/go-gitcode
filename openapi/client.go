@@ -157,7 +157,9 @@ func (c *APIClient) Do(ctx context.Context, req *http.Request, receiver any) (*h
 }
 
 func parseResp(resp *http.Response, receiver any) (*http.Response, error) {
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	if receiver == nil {
 		return resp, nil
@@ -196,19 +198,19 @@ func successGetData(resp *http.Response) bool {
 }
 
 func successCreated(resp *http.Response) bool {
-	return resp != nil && resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusCreated
+	return resp != nil && (resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusCreated)
 }
 
 func successModified(resp *http.Response) bool {
-	return resp != nil && resp.StatusCode == http.StatusOK ||
-		resp.StatusCode == http.StatusAccepted || resp.StatusCode == http.StatusNoContent
+	return resp != nil && (resp.StatusCode == http.StatusOK ||
+		resp.StatusCode == http.StatusAccepted || resp.StatusCode == http.StatusNoContent)
 }
 
 func (c *APIClient) BareDo(ctx context.Context, req *http.Request) (*http.Response, error) {
 	if ctx == nil {
 		return nil, nilContentError
 	}
-	req.WithContext(ctx)
+	req = req.WithContext(ctx)
 
 	resp, err := c.client.Do(req)
 	if err != nil {

@@ -18,7 +18,7 @@
     "git_ssh_url": "git@gitcode.com:ibforuorg/test1.git",
     "git_http_url": "https://gitcode.com/ibforuorg/test1.git",
     "namespace": "ibforuorg",
-    "visibility_level": 20,
+    "visibility_level": 0,
     "path_with_namespace": "ibforuorg/test1",
     "default_branch": "main",
     "ci_config_path": null,
