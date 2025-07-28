@@ -75,7 +75,7 @@ func ReadTestData(t *testing.T, path string, ptr any) []byte {
 		}
 		return nil
 	}
-	if _, err = os.Stat(absPath); !os.IsNotExist(err) {
+	if _, err = os.Stat(filepath.Clean(absPath)); !os.IsNotExist(err) {
 		data, err := os.ReadFile(absPath)
 		if err != nil {
 			t.Error(path + " read failed")

@@ -41,11 +41,11 @@ func (a *GitCodeAuthentication) GetEventGUID() string {
 const (
 	HeaderEventType  = "X-GitCode-Event"
 	HeaderEventGUID  = "X-GitCode-Delivery"
-	HeaderEventToken = "X-GitCode-Signature-256"
+	HeaderEventToken = "X-GitCode-Signature-256" //#nosec G101 -- This is a false positive
 
 	ErrorMessageEvent                       = "missing X-GitCode-Event"
-	ErrorMessageEmptyToken                  = "missing X-GitCode-Signature-256"
-	ErrorMessageInvalidToken                = "invalid X-GitCode-Signature-256"
+	ErrorMessageEmptyToken                  = "missing Token"
+	ErrorMessageInvalidToken                = "invalid Token"
 	ErrorMessageInvalidAuthenticationObject = "invalid Authentication"
 )
 

@@ -57,6 +57,7 @@ func TestDo(t *testing.T) {
 	assert.Equal(t, errorRespReceiverNotAnPointer, err)
 
 	receiver := new(Issue)
+	//nolint:staticcheck
 	result, err = api.Do(nil, httptest.NewRequest(http.MethodPost, "http://localhost:8080/2", nil), receiver)
 	assert.Nil(t, result)
 	assert.Equal(t, errorContentIsNil, err)
