@@ -85,6 +85,11 @@ func signSuccess(token, signKey string, payload *bytes.Buffer) bool {
 	mac := hmac.New(sha256.New, []byte(signKey))
 	mac.Write(payload.Bytes())
 
-	expected := hex.EncodeToString(mac.Sum(nil))
-	return expected == token[7:]
+	expected := mac.Sum(nil)
+	actual, err := hex.DecodeString(token[7:])
+	if err != nil {
+		return false
+	}
+
+	return hmac.Equal(expected, actual)
 }
