@@ -220,3 +220,17 @@ func (s *RepositoryService) UpdateRepoSetting(ctx context.Context, owner, repo s
 	resp, err := s.api.Do(ctx, req, nil)
 	return successModified(resp), err
 }
+
+// UpdateRepoBaseSetting 更新仓库设置
+//
+// api Docs: https://docs.gitcode.com/docs/apis/patch-api-v-5-repos-owner-repo
+func (s *RepositoryService) UpdateRepoBaseSetting(ctx context.Context, owner, repo string, repoContent *RepositoryRequest) (bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s", owner, repo)
+	req, err := newRequest(s.api, http.MethodPatch, urlStr, repoContent)
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := s.api.Do(ctx, req, nil)
+	return successModified(resp), err
+}
