@@ -96,6 +96,8 @@ type CommitPatch struct {
 	Diff        *string `json:"diff,omitempty"`
 	OldPath     *string `json:"old_path,omitempty"`
 	NewPath     *string `json:"new_path,omitempty"`
+	AMode       *string `json:"a_mode,omitempty"`
+	BMode       *string `json:"b_mode,omitempty"`
 	NewFile     *bool   `json:"new_file,omitempty"`
 	RenamedFile *bool   `json:"renamed_file,omitempty"`
 	DeletedFile *bool   `json:"deleted_file,omitempty"`

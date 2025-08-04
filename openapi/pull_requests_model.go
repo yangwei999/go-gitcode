@@ -52,6 +52,9 @@ type PullRequest struct {
 	ReviewComments      *int       `json:"review_comments,omitempty"`
 	Assignee            *User      `json:"assignee,omitempty"`
 	Assignees           []*User    `json:"assignees,omitempty"`
+	AssigneesNumber     *int       `json:"assignees_number,omitempty"`
+	Testers             []*User    `json:"testers,omitempty"`
+	TestersNumber       *int       `json:"testers_number,omitempty"`
 	MaintainerCanModify *bool      `json:"maintainer_can_modify,omitempty"`
 	AuthorAssociation   *string    `json:"author_association,omitempty"`
 	NodeID              *string    `json:"node_id,omitempty"`
@@ -71,6 +74,10 @@ type PullRequestBranch struct {
 type MergeAbleState struct {
 	MergeRequestID *int64 `json:"merge_request_id,omitempty"`
 	State          *bool  `json:"state,omitempty"`
+	ConflictPassed *bool  `json:"conflict_passed,omitempty"`
+	ReviewersPass  *bool  `json:"approval_reviewers_required_passed,omitempty"`
+	AssigneesPass  *bool  `json:"approval_approvers_required_passed,omitempty"`
+	TestersPass    *bool  `json:"approval_testers_required_passed,omitempty"`
 }
 
 type PullRequestRequest struct {
