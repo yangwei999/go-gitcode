@@ -150,3 +150,10 @@ func (pr *PullRequestEvent) GetUpdateTime() *string {
 
 	return pr.Attributes.UpdatedTime.ToString()
 }
+
+func (pr *PullRequestEvent) GetRepoVisibility() *string {
+	if pr.Repository == nil {
+		return nil
+	}
+	return Visibility(pr.Repository.Visibility)
+}

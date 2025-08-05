@@ -102,7 +102,7 @@
     "avatar_url": "https://123.cn/fjkhagsdb",
     "name": "test1",
     "namespace": "ibforuorg",
-    "visibility_level": 20,
+    "visibility_level": 0,
     "default_branch": "main",
     "id": 4163304,
     "homepage": "https://gitcode.com/ibforuorg/test1"

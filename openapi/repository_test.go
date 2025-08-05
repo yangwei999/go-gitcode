@@ -34,6 +34,8 @@ func TestRepository(t *testing.T) {
 	getRepoCustomRoles(t, client, mux)
 	getRepoTree(t, client, mux)
 	getRepoFiles(t, client, mux)
+	updatePRSetting(t, client, mux)
+	updateRepoSetting(t, client, mux)
 }
 
 func getRepoContributors(t *testing.T, client *APIClient, mux *http.ServeMux) {
@@ -84,7 +86,7 @@ func createOrGetRepo(t *testing.T, client *APIClient, mux *http.ServeMux) {
 		w.Header().Set(headerContentTypeName, headerContentTypeJsonValue)
 		if r.Method == http.MethodPost {
 			_ = json.NewEncoder(w).Encode(want)
-		} else if r.Method == http.MethodGet {
+		} else {
 			_ = json.NewEncoder(w).Encode([]Repository{*want})
 		}
 
@@ -181,4 +183,22 @@ func getRepoFiles(t *testing.T, client *APIClient, mux *http.ServeMux) {
 		assert.Equal(t, want[i], got[i])
 	}
 
+}
+
+func updatePRSetting(t *testing.T, client *APIClient, mux *http.ServeMux) {
+	urlStr := fmt.Sprintf("/repos/%s/%s/pull_request_settings", owner, repo)
+	mockResponse(t, mux, urlStr, nil)
+
+	ok, err := client.Repository.UpdateRepoPullRequestSetting(context.Background(), owner, repo)
+	assert.Nil(t, err)
+	assert.True(t, ok)
+}
+
+func updateRepoSetting(t *testing.T, client *APIClient, mux *http.ServeMux) {
+	urlStr := fmt.Sprintf("/repos/%s/%s/repo_settings", owner, repo)
+	mockResponse(t, mux, urlStr, nil)
+
+	ok, err := client.Repository.UpdateRepoSetting(context.Background(), owner, repo)
+	assert.Nil(t, err)
+	assert.True(t, ok)
 }

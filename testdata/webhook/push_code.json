@@ -22,7 +22,7 @@
     "git_ssh_url": "git@gitcode.com:ibforuorg/org-repo-role-member-manage.git",
     "git_http_url": "https://gitcode.com/ibforuorg/org-repo-role-member-manage.git",
     "namespace": "ibforuorg",
-    "visibility_level": 20,
+    "visibility_level": 1,
     "path_with_namespace": "ibforuorg/org-repo-role-member-manage",
     "default_branch": "main",
     "ci_config_path": null,

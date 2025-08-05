@@ -30,6 +30,7 @@ const (
 	IssuesDeleteLabelFailed   = issue + "issues_delete_label_failed.json"
 	IssuesHavingLabels        = issue + "issues_having_labels.json"
 	IssuesLinkingPrs          = issue + "issues_linking_prs.json"
+	IssuesListComments        = issue + "issues_list_comments.json"
 	IssuesListLabels          = issue + "issues_list_labels.json"
 	IssuesUpdate              = issue + "issues_update.json"
 	pr                        = dir + string(os.PathSeparator) + "pr" + string(os.PathSeparator)
@@ -74,7 +75,7 @@ func ReadTestData(t *testing.T, path string, ptr any) []byte {
 		}
 		return nil
 	}
-	if _, err = os.Stat(absPath); !os.IsNotExist(err) {
+	if _, err = os.Stat(filepath.Clean(absPath)); !os.IsNotExist(err) {
 		data, err := os.ReadFile(absPath)
 		if err != nil {
 			t.Error(path + " read failed")

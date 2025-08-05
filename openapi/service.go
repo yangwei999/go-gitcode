@@ -37,8 +37,8 @@ const (
 )
 
 var (
-	nilContentError               = errors.New("request context should be non-nil")
-	respReceiverNotAnPointerError = errors.New("response's receiver should be an pointer")
+	errorContentIsNil             = errors.New("request context should be non-nil")
+	errorRespReceiverNotAnPointer = errors.New("response's receiver should be an pointer")
 )
 
 type RequestHandlerType string

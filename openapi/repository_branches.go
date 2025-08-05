@@ -73,7 +73,7 @@ func (s *RepositoryService) CreateRepoBranch(ctx context.Context, owner, repo, b
 // api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-branches-setting-new
 func (s *RepositoryService) CreateRepoBranchProtectedRule(ctx context.Context, owner, repo, branch, permission string) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/branches/setting/new", owner, repo)
-	req, err := newRequest(s.api, http.MethodPost, urlStr, &BranchProtectedRuleRequest{
+	req, err := newRequest(s.api, http.MethodPut, urlStr, &BranchProtectedRuleRequest{
 		PushPermission:  permission,
 		MergePermission: permission,
 		BranchName:      branch,

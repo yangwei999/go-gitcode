@@ -20,10 +20,11 @@ import (
 )
 
 type GitCodeAccessor struct {
-	Issues *IssueEvent
-	PR     *PullRequestEvent
-	Note   *NoteEvent
-	Push   *PushEvent
+	Issues  *IssueEvent
+	PR      *PullRequestEvent
+	Note    *NoteEvent
+	Push    *PushEvent
+	Payload *bytes.Buffer
 }
 
 const (
@@ -33,35 +34,35 @@ const (
 	noteEvent        = "Note Hook"
 )
 
-func (a *GitCodeAccessor) GetAccessor(w http.ResponseWriter, r *http.Request) (any, *bytes.Buffer, *string, *string) {
-	payload, err := ReadPayload(w, r)
-	if err != nil {
-		return nil, nil, nil, nil
+func (a *GitCodeAccessor) GetAccessor(r *http.Request) (any, *string, *string) {
+
+	if a.Payload == nil {
+		return nil, nil, nil
 	}
 
-	eventGUID := r.Header.Get(headerEventGUID)
-	eventType := r.Header.Get(headerEventType)
+	eventGUID := r.Header.Get(HeaderEventGUID)
+	eventType := r.Header.Get(HeaderEventType)
 
 	switch eventType {
 	case issueEvent:
 		a.Issues = new(IssueEvent)
-		_ = json.Unmarshal(payload.Bytes(), a.Issues)
-		return a.Issues, payload, &eventType, &eventGUID
+		_ = json.Unmarshal(a.Payload.Bytes(), a.Issues)
+		return a.Issues, &eventType, &eventGUID
 	case pullRequestEvent:
 		a.PR = new(PullRequestEvent)
-		_ = json.Unmarshal(payload.Bytes(), a.PR)
-		return a.PR, payload, &eventType, &eventGUID
+		_ = json.Unmarshal(a.Payload.Bytes(), a.PR)
+		return a.PR, &eventType, &eventGUID
 	case noteEvent:
 		a.Note = new(NoteEvent)
-		_ = json.Unmarshal(payload.Bytes(), a.Note)
-		return a.Note, payload, &eventType, &eventGUID
+		_ = json.Unmarshal(a.Payload.Bytes(), a.Note)
+		return a.Note, &eventType, &eventGUID
 	case pushEvent:
 		a.Push = new(PushEvent)
-		_ = json.Unmarshal(payload.Bytes(), a.Push)
-		return a.Push, payload, &eventType, &eventGUID
+		_ = json.Unmarshal(a.Payload.Bytes(), a.Push)
+		return a.Push, &eventType, &eventGUID
 	default:
 		// do nothing
 	}
 
-	return nil, payload, &eventType, &eventGUID
+	return nil, &eventType, &eventGUID
 }

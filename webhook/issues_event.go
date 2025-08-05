@@ -20,10 +20,11 @@ import (
 )
 
 type Project struct {
-	Name      *string `json:"name,omitempty"`
-	Namespace *string `json:"namespace,omitempty"`
-	Path      *string `json:"path_with_namespace,omitempty"`
-	HTMLURL   *string `json:"web_url,omitempty"`
+	Name       *string `json:"name,omitempty"`
+	Namespace  *string `json:"namespace,omitempty"`
+	Path       *string `json:"path_with_namespace,omitempty"`
+	HTMLURL    *string `json:"web_url,omitempty"`
+	Visibility *int    `json:"visibility_level,omitempty"`
 }
 
 type Attributes struct {
@@ -162,4 +163,29 @@ func (iss *IssueEvent) GetUpdateTime() *string {
 	}
 
 	return iss.Attributes.UpdatedTime.ToString()
+}
+
+func Visibility(level *int) *string {
+	if level == nil {
+		return nil
+	}
+	repoPrivate := "private"
+	repoPublic := "public"
+	var repoType *string
+	switch *level {
+	case 0:
+		repoType = &repoPrivate
+	case 20:
+		repoType = &repoPublic
+	default:
+		repoType = nil
+	}
+	return repoType
+}
+
+func (iss *IssueEvent) GetRepoVisibility() *string {
+	if iss.Repository == nil {
+		return nil
+	}
+	return Visibility(iss.Repository.Visibility)
 }

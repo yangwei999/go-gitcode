@@ -29,6 +29,9 @@ type User struct {
 	Permission  *string     `json:"permission,omitempty"`
 	RoleId      *string     `json:"role_id,omitempty"`
 	Permissions *Permission `json:"permissions,omitempty"`
+	Assignee    *bool       `json:"assignee,omitempty"`
+	CodeOwner   *bool       `json:"code_owner,omitempty"`
+	Accept      *bool       `json:"accept,omitempty"`
 }
 
 type Permission struct {

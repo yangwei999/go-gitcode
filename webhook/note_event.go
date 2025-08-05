@@ -172,3 +172,10 @@ func (n *NoteEvent) GetUpdateTime() *string {
 
 	return n.Attributes.UpdatedTime.ToString()
 }
+
+func (n *NoteEvent) GetRepoVisibility() *string {
+	if n.Repository == nil {
+		return nil
+	}
+	return Visibility(n.Repository.Visibility)
+}

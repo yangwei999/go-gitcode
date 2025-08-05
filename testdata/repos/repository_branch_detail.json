@@ -1,0 +1,30 @@
+{
+  "name": "master",
+  "commit": {
+    "id": "398e60a1bd16d896fe77b4e17475da9e754aabd4",
+    "message": "\n【PR模版】:优化_bt_compare中int1和int2比较的性能\n\nCreated-by: wangfeihuo\nCommit-by: wangfeihuo\nMerged-by: opengauss_bot\nDescription: \n# Pull Request 模板\n\n## 描述\n\n请提供此 Pull Request 的高级别说明\n\n## 类型\n\n- [x] Bug 修复\n- [ ] 新功能\n- [ ] 代码风格更新（格式化，局部变量）\n- [ ] 重构（即不是新增功能，也不是修改bug的代码变动）\n- [ ] 构建过程或辅助工具的变动\n- [ ] 文档内容更新\n\n## 如何测试\n\n描述测试这个变更的步骤，包括哪些文件需要被修改。\n\n## Checklist\n\n- [x] 我的代码遵循这个项目的代码风格\n- [ ] 我已经自己测试过我的代码\n- [x] 我已经更新了相应的文档\n- [ ] 我已经根据需要更新了对应的变更日志\n- [ ] 我已经在标题中正确使用了类型标签（例如：`feat:`, `fix:`）\n\n## 其他信息\n\n在这里可以添加任何与这个 Pull Request 相关的其他说明\n\n内部优化，不影响表现，也无法添加fastcheck用例\n\nSee merge request: opengauss/openGauss-server!7697",
+    "parent_ids": [
+      "8960400aea5c8e14239d0abb238b188bb7c08333",
+      "7317fd009da3fde1695178fbb0d042a1a9c139a8"
+    ],
+    "authored_date": "2025-05-10T07:33:00.000Z",
+    "author_name": "opengauss_bot",
+    "author_email": "****da@das.com",
+    "author_user_name": "opengauss_bot",
+    "committed_date": "2025-05-10T07:33:00.000Z",
+    "committer_name": "opengauss_bot",
+    "committer_email": "****da@das.com",
+    "committer_user_name": "opengauss_bot",
+    "short_id": "398e60a1",
+    "created_at": "2025-05-10T07:33:00.000Z",
+    "title": "merge master into master",
+    "author_avatar_url": "*****",
+    "committer_avatar_url": "*****"
+  },
+  "merged": false,
+  "protected": true,
+  "developers_can_push": false,
+  "developers_can_merge": false,
+  "can_push": true,
+  "default": true
+}
