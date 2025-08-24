@@ -72,12 +72,19 @@ type PullRequestBranch struct {
 }
 
 type MergeAbleState struct {
-	MergeRequestID *int64 `json:"merge_request_id,omitempty"`
-	State          *bool  `json:"state,omitempty"`
-	ConflictPassed *bool  `json:"conflict_passed,omitempty"`
-	ReviewersPass  *bool  `json:"approval_reviewers_required_passed,omitempty"`
-	AssigneesPass  *bool  `json:"approval_approvers_required_passed,omitempty"`
-	TestersPass    *bool  `json:"approval_testers_required_passed,omitempty"`
+	MergeRequestID          *int64               `json:"merge_request_id,omitempty"`
+	State                   *bool                `json:"state,omitempty"`
+	ConflictPassed          *bool                `json:"conflict_passed,omitempty"`
+	ReviewersPass           *bool                `json:"approval_reviewers_required_passed,omitempty"`
+	AssigneesPass           *bool                `json:"approval_approvers_required_passed,omitempty"`
+	TestersPass             *bool                `json:"approval_testers_required_passed,omitempty"`
+	ResolveDiscussionPassed *bool                `json:"resolve_discussion_passed,omitempty"`
+	PRSetting               *MergeRequestSetting `json:"merge_request_switch,omitempty"`
+}
+
+type MergeRequestSetting struct {
+	MergeMethod                               *string `json:"merge_method,omitempty"`
+	OnlyAllowMergeIfAllDiscussionsAreResolved *bool   `json:"only_allow_merge_if_all_discussions_are_resolved,omitempty"`
 }
 
 type PullRequestRequest struct {
