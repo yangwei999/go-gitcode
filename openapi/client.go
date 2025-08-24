@@ -138,7 +138,7 @@ func (c *APIClient) Do(ctx context.Context, req *http.Request, receiver any) (*h
 	retry := 3
 	for i := 1; i <= retry; i++ {
 		resp, err = c.BareDo(ctx, req)
-		if resp != nil && resp.StatusCode <= http.StatusUnavailableForLegalReasons {
+		if resp != nil && resp.StatusCode <= http.StatusPreconditionRequired {
 			break
 		}
 		time.Sleep(time.Duration(i) * time.Second)

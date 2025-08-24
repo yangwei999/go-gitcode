@@ -220,7 +220,7 @@ func TestNewRequestError(t *testing.T) {
 	ok, err = client.Repository.RemoveRepoBranchProtectedRule(context.Background(), owner, repo, branch)
 	compare(t, ok, err, mockErr, nil)
 
-	ok, err = client.Repository.UpdateRepoPullRequestSetting(context.Background(), owner, repo)
+	ok, err = client.Repository.UpdateRepoPullRequestSetting(context.Background(), owner, repo, nil)
 	compare(t, ok, err, mockErr, nil)
 
 	ok, err = client.Repository.UpdateRepoSetting(context.Background(), owner, repo)

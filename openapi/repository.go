@@ -186,14 +186,9 @@ func (s *RepositoryService) GetRepoFileList(ctx context.Context, owner, repo, re
 // UpdateRepoPullRequestSetting 更新 Pull Request设置
 //
 // api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-pull-request-settings
-func (s *RepositoryService) UpdateRepoPullRequestSetting(ctx context.Context, owner, repo string) (bool, error) {
+func (s *RepositoryService) UpdateRepoPullRequestSetting(ctx context.Context, owner, repo string, prSetting *RepositoryRepoPullRequestSettingRequest) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pull_request_settings", owner, repo)
-	req, err := newRequest(s.api, http.MethodPut, urlStr, RepositoryRepoPullRequestSettingRequest{
-		DisableMergeBySelf:    true,
-		AddNotesAfterMerged:   true,
-		CanReopen:             true,
-		AllowLiteMergeRequest: true,
-	})
+	req, err := newRequest(s.api, http.MethodPut, urlStr, prSetting)
 	if err != nil {
 		return false, err
 	}
@@ -202,7 +197,7 @@ func (s *RepositoryService) UpdateRepoPullRequestSetting(ctx context.Context, ow
 	return successModified(resp), err
 }
 
-// UpdateRepoSetting 更新仓库设置
+// UpdateRepoSetting 更新仓库功能设置
 //
 // api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-repo-settings
 func (s *RepositoryService) UpdateRepoSetting(ctx context.Context, owner, repo string) (bool, error) {

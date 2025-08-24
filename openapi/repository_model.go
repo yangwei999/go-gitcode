@@ -222,10 +222,24 @@ type RepositoryTree struct {
 }
 
 type RepositoryRepoPullRequestSettingRequest struct {
-	DisableMergeBySelf    bool `json:"disable_merge_by_self,omitempty"`
-	AddNotesAfterMerged   bool `json:"add_notes_after_merged,omitempty"`
-	CanReopen             bool `json:"can_reopen,omitempty"`
-	AllowLiteMergeRequest bool `json:"is_allow_lite_merge_request,omitempty"`
+	DisableMergeBySelf                        *bool   `json:"disable_merge_by_self,omitempty"`
+	AddNotesAfterMerged                       *bool   `json:"add_notes_after_merged,omitempty"`
+	CanReopen                                 *bool   `json:"can_reopen,omitempty"`
+	AllowLiteMergeRequest                     *bool   `json:"is_allow_lite_merge_request,omitempty"`
+	ApprovalRequiredReviewersEnable           *bool   `json:"approval_required_reviewers_enable,omitempty"`
+	ApprovalRequiredReviewers                 *int    `json:"approval_required_reviewers,omitempty"`
+	OnlyAllowMergeIfAllDiscussionsAreResolved *bool   `json:"only_allow_merge_if_all_discussions_are_resolved,omitempty"`
+	DisableSquashMerge                        *bool   `json:"disable_squash_merge,omitempty"`
+	AutoSquashMerge                           *bool   `json:"auto_squash_merge,omitempty"`
+	MergeMethod                               *string `json:"merge_method,omitempty"`
+	SquashMergeWithNoMergeCommit              *bool   `json:"squash_merge_with_no_merge_commit,omitempty"`
+	MergedCommitAuthor                        *string `json:"merged_commit_author,omitempty"`
+	ApprovalApproverIds                       *string `json:"approval_approver_ids,omitempty"`
+	ApprovalRequiredApprovers                 *int    `json:"approval_required_approvers,omitempty"`
+	ApprovalTesterIds                         *string `json:"approval_tester_ids,omitempty"`
+	ApprovalRequiredTesters                   *int    `json:"approval_required_testers,omitempty"`
+	LiteMergeRequestPrefixTitle               *string `json:"lite_merge_request_prefix_title,omitempty"`
+	CloseIssueWhenMrMerged                    *bool   `json:"close_issue_when_mr_merged,omitempty"`
 }
 
 type RepositoryRepoSettingRequest struct {
