@@ -24,12 +24,13 @@ import (
 func TestParseResp(t *testing.T) {
 	w := httptest.NewRecorder()
 	resp := w.Result()
-	resp1, err := parseResp(resp, nil)
+	req, _ := http.NewRequest(http.MethodGet, "", nil)
+	resp1, err := parseResp(req, resp, nil)
 	assert.Equal(t, resp, resp1)
 	assert.Equal(t, nil, err)
 
 	r2 := new(struct{})
-	resp1, err = parseResp(resp, r2)
+	resp1, err = parseResp(req, resp, r2)
 	assert.Equal(t, resp, resp1)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, struct{}{}, *r2)
@@ -44,7 +45,7 @@ func TestParseResp(t *testing.T) {
 	resp3 := w1.Result()
 
 	r4 := new(simple)
-	resp4, err := parseResp(resp3, r4)
+	resp4, err := parseResp(req, resp3, r4)
 	assert.Equal(t, resp3, resp4)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, simple{A: "4123", B: 912}, *r4)
