@@ -36,6 +36,7 @@ type Issue struct {
 	ID               *int64            `json:"id,omitempty"`
 	HTMLURL          *string           `json:"html_url,omitempty"`
 	Number           *string           `json:"number,omitempty"`
+	IssueType        *string           `json:"issue_type,omitempty"`
 	State            *string           `json:"state,omitempty"`
 	IssueState       *string           `json:"issue_state,omitempty"`
 	IssueStateDetail *IssueStateDetail `json:"issue_state_detail,omitempty"`
