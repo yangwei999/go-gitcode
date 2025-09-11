@@ -248,3 +248,11 @@ type RepositoryRepoSettingRequest struct {
 	ForbiddenDeveloperCreateBranch bool `json:"forbidden_developer_create_branch,omitempty"`
 	ForbiddenDeveloperCreateTag    bool `json:"forbidden_developer_create_tag,omitempty"`
 }
+
+type RepositoryTag struct {
+	Name       *string `json:"name,omitempty"`
+	Message    *string `json:"message,omitempty"`
+	Commit     *Commit `json:"commit,omitempty"`
+	ZipballURL *string `json:"zipball_url,omitempty"`
+	TarballURL *string `json:"tarball_url,omitempty"`
+}
