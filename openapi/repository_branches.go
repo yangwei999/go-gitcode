@@ -130,5 +130,5 @@ func (s *RepositoryService) ListRepoAllTag(ctx context.Context, owner, repo, pag
 
 	var tags []*RepositoryTag
 	resp, err := s.api.Do(ctx, req, &tags)
-	return tags, successGetData(resp), err
+	return tags, successCreated(resp), err
 }
