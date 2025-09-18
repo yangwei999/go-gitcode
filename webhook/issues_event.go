@@ -15,8 +15,9 @@ package webhook
 
 import (
 	"encoding/json"
-	"github.com/opensourceways/go-gitcode/openapi"
 	"strconv"
+
+	"github.com/opensourceways/go-gitcode/openapi"
 )
 
 type Project struct {
@@ -31,6 +32,7 @@ type Attributes struct {
 	ID           *json.Number       `json:"id,omitempty"`
 	Action       *string            `json:"action,omitempty"`
 	ActionDetail *string            `json:"update_reason,omitempty"`
+	Title        *string            `json:"title,omitempty"`
 	State        *string            `json:"state,omitempty"`
 	Number       *int               `json:"iid,omitempty"`
 	CommentID    *string            `json:"discussion_id,omitempty"`
