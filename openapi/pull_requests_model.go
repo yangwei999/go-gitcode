@@ -92,6 +92,14 @@ type PullRequestRequest struct {
 	Target          PullRequest `json:"target,omitempty"`
 }
 
+// PullRequestCreateRequest 创建PR的请求参数
+type PullRequestCreateRequest struct {
+	Title string `json:"title"`
+	Body  string `json:"body,omitempty"`
+	Head  string `json:"head"`
+	Base  string `json:"base"`
+}
+
 type PullRequestRequestMerge struct {
 	Method string `json:"merge_method,omitempty"`
 }

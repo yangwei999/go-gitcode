@@ -21,6 +21,51 @@ import (
 	"strconv"
 )
 
+// GetRepo 获取仓库信息
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo
+func (s *RepositoryService) GetRepo(ctx context.Context, owner, repo string) (*Repository, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s", owner, repo)
+	req, err := newRequest(s.api, http.MethodGet, urlStr, nil)
+	if err != nil {
+		return nil, false, err
+	}
+
+	repository := new(Repository)
+	resp, err := s.api.Do(ctx, req, repository)
+	return repository, successGetData(resp), err
+}
+
+// CreateRepoFile 新建文件
+//
+// api Docs: https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-contents-path
+func (s *RepositoryService) CreateRepoFile(ctx context.Context, owner, repo, path string, fileContent *FileRequest) (*FileCommitResponse, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/contents/%s", owner, repo, path)
+	req, err := newRequest(s.api, http.MethodPost, urlStr, fileContent)
+	if err != nil {
+		return nil, false, err
+	}
+
+	fileResp := new(FileCommitResponse)
+	resp, err := s.api.Do(ctx, req, fileResp)
+	return fileResp, successCreated(resp), err
+}
+
+// UpdateRepoFile 更新文件
+//
+// api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-contents-path
+func (s *RepositoryService) UpdateRepoFile(ctx context.Context, owner, repo, path string, fileContent *FileRequest) (*FileCommitResponse, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/contents/%s", owner, repo, path)
+	req, err := newRequest(s.api, http.MethodPut, urlStr, fileContent)
+	if err != nil {
+		return nil, false, err
+	}
+
+	fileResp := new(FileCommitResponse)
+	resp, err := s.api.Do(ctx, req, fileResp)
+	return fileResp, successModified(resp), err
+}
+
 // GetRepoContributors 获取仓库贡献者
 //
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-contributors

@@ -234,3 +234,17 @@ type RepositoryRepoSettingRequest struct {
 	ForbiddenDeveloperCreateBranch bool `json:"forbidden_developer_create_branch,omitempty"`
 	ForbiddenDeveloperCreateTag    bool `json:"forbidden_developer_create_tag,omitempty"`
 }
+
+// FileRequest 文件操作请求参数
+type FileRequest struct {
+	Content *string `json:"content"`
+	Message *string `json:"message"`
+	Branch  *string `json:"branch,omitempty"`
+	Sha     *string `json:"sha,omitempty"`
+}
+
+// FileCommitResponse 文件操作响应
+type FileCommitResponse struct {
+	Content *RepositoryContent `json:"content,omitempty"`
+	Commit  *RepositoryCommit  `json:"commit,omitempty"`
+}
