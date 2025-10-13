@@ -99,6 +99,25 @@ type PullRequestRequest struct {
 	Target          PullRequest `json:"target,omitempty"`
 }
 
+// PullRequestCreateRequest 创建PR的请求参数
+type PullRequestCreateRequest struct {
+	Title               string `json:"title"`
+	Head                string `json:"head"`
+	Base                string `json:"base"`
+	Body                string `json:"body,omitempty"`
+	MilestoneNumber     string `json:"milestone_number,omitempty"`
+	Labels              string `json:"labels,omitempty"`
+	Issue               string `json:"issue,omitempty"`
+	Assignees           string `json:"assignees,omitempty"`
+	Testers             string `json:"testers,omitempty"`
+	PruneSourceBranch   bool   `json:"prune_source_branch,omitempty"`
+	Draft               bool   `json:"draft,omitempty"`
+	Squash              bool   `json:"squash,omitempty"`
+	SquashCommitMessage string `json:"squash_commit_message,omitempty"`
+	ForkPath            string `json:"fork_path,omitempty"` // fork项目路径【owner/repo】，跨仓PR 必填。
+
+}
+
 type PullRequestRequestMerge struct {
 	Method string `json:"merge_method,omitempty"`
 }
