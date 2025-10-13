@@ -20,14 +20,17 @@ import (
 )
 
 type PRPart struct {
-	Action       *string       `json:"action,omitempty"`
-	State        *string       `json:"state,omitempty"`
-	Number       *int          `json:"iid,omitempty"`
-	Author       *openapi.User `json:"author,omitempty"`
-	TargetBranch *string       `json:"target_branch,omitempty"`
-	Source       *Project      `json:"source,omitempty"`
-	SourceBranch *string       `json:"source_branch,omitempty"`
-	ID           *json.Number  `json:"id,omitempty"`
+	Action       *string         `json:"action,omitempty"`
+	State        *string         `json:"state,omitempty"`
+	Number       *int            `json:"iid,omitempty"`
+	Author       *openapi.User   `json:"author,omitempty"`
+	TargetBranch *string         `json:"target_branch,omitempty"`
+	Source       *Project        `json:"source,omitempty"`
+	SourceBranch *string         `json:"source_branch,omitempty"`
+	ID           *json.Number    `json:"id,omitempty"`
+	Approves     []*openapi.User `json:"approver_list,omitempty"`
+	Assignees    []*openapi.User `json:"assignee_list,omitempty"`
+	Reviewers    []*openapi.User `json:"reviewer_list,omitempty"`
 }
 
 type PullRequestEvent struct {
@@ -163,4 +166,36 @@ func (pr *PullRequestEvent) GetTitle() *string {
 		return nil
 	}
 	return pr.Attributes.Title
+}
+
+func (pr *PullRequestEvent) GetIssueTypeName() *string {
+	return nil
+}
+
+func (pr *PullRequestEvent) GetIssueAuthor() *string {
+	return nil
+}
+
+func (pr *PullRequestEvent) GetIssueAssignees() []string {
+	return nil
+}
+
+func (pr *PullRequestEvent) GetPRAuthor() *string {
+	if pr.User == nil {
+		return nil
+	}
+	return pr.User.UserName
+}
+
+func (pr *PullRequestEvent) GetPRAssignees() []string {
+	if pr.Attributes == nil || pr.Attributes.Approves == nil {
+		return nil
+	}
+	var assignees []string
+	for i := range pr.Attributes.Approves {
+		if pr.Attributes.Approves[i].UserName != nil {
+			assignees = append(assignees, *pr.Attributes.Approves[i].UserName)
+		}
+	}
+	return assignees
 }

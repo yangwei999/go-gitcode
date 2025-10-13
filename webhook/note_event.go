@@ -186,3 +186,38 @@ func (n *NoteEvent) GetTitle() *string {
 	}
 	return n.Attributes.Title
 }
+
+func (n *NoteEvent) GetIssueTypeName() *string {
+	return nil
+}
+
+func (n *NoteEvent) GetIssueAuthor() *string {
+	if n.Issue == nil || n.Issue.Author == nil {
+		return nil
+	}
+	return n.Issue.Author.UserName
+}
+
+func (n *NoteEvent) GetIssueAssignees() []string {
+	return nil
+}
+
+func (n *NoteEvent) GetPRAuthor() *string {
+	if n.PR == nil || n.PR.Author == nil {
+		return nil
+	}
+	return n.PR.Author.UserName
+}
+
+func (n *NoteEvent) GetPRAssignees() []string {
+	if n.PR == nil || n.PR.Approves == nil {
+		return nil
+	}
+	var assignees []string
+	for i := range n.PR.Approves {
+		if n.PR.Approves[i].UserName != nil {
+			assignees = append(assignees, *n.PR.Approves[i].UserName)
+		}
+	}
+	return assignees
+}

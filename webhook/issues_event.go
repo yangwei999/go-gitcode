@@ -43,6 +43,9 @@ type Attributes struct {
 	SourceBranch *string            `json:"source_branch,omitempty"`
 	CreateTime   *openapi.Timestamp `json:"created_at,omitempty"`
 	UpdatedTime  *openapi.Timestamp `json:"updated_at,omitempty"`
+	Approves     []*openapi.User    `json:"approver_list,omitempty"`
+	Assignees    []*openapi.User    `json:"assignee_list,omitempty"`
+	Reviewers    []*openapi.User    `json:"reviewer_list,omitempty"`
 }
 
 type IssuePart struct {
@@ -196,4 +199,36 @@ func (iss *IssueEvent) GetTitle() *string {
 		return nil
 	}
 	return iss.Attributes.Title
+}
+
+func (iss *IssueEvent) GetIssueTypeName() *string {
+	return nil
+}
+
+func (iss *IssueEvent) GetIssueAuthor() *string {
+	if iss.User == nil {
+		return nil
+	}
+	return iss.User.UserName
+}
+
+func (iss *IssueEvent) GetIssueAssignees() []string {
+	if iss.Assignees == nil {
+		return nil
+	}
+	var assignees []string
+	for i := range iss.Assignees {
+		if iss.Assignees[i].UserName != nil {
+			assignees = append(assignees, *iss.Assignees[i].UserName)
+		}
+	}
+	return assignees
+}
+
+func (iss *IssueEvent) GetPRAuthor() *string {
+	return nil
+}
+
+func (iss *IssueEvent) GetPRAssignees() []string {
+	return nil
 }

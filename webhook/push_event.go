@@ -102,3 +102,23 @@ func (p *PushEvent) GetRepoVisibility() *string {
 func (p *PushEvent) GetTitle() *string {
 	return nil
 }
+
+func (p *PushEvent) GetIssueTypeName() *string {
+	return nil
+}
+
+func (p *PushEvent) GetIssueAuthor() *string {
+	return nil
+}
+
+func (p *PushEvent) GetIssueAssignees() []string {
+	return nil
+}
+
+func (p *PushEvent) GetPRAuthor() *string {
+	return nil
+}
+
+func (p *PushEvent) GetPRAssignees() []string {
+	return nil
+}
