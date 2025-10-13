@@ -98,3 +98,7 @@ func (p *PushEvent) GetRepoVisibility() *string {
 	}
 	return Visibility(p.Repository.Visibility)
 }
+
+func (p *PushEvent) GetTitle() *string {
+	return nil
+}

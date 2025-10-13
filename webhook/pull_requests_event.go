@@ -157,3 +157,10 @@ func (pr *PullRequestEvent) GetRepoVisibility() *string {
 	}
 	return Visibility(pr.Repository.Visibility)
 }
+
+func (pr *PullRequestEvent) GetTitle() *string {
+	if pr.Attributes == nil {
+		return nil
+	}
+	return pr.Attributes.Title
+}

@@ -36,6 +36,7 @@ type Issue struct {
 	ID               *int64            `json:"id,omitempty"`
 	HTMLURL          *string           `json:"html_url,omitempty"`
 	Number           *string           `json:"number,omitempty"`
+	IssueType        *string           `json:"issue_type,omitempty"`
 	State            *string           `json:"state,omitempty"`
 	IssueState       *string           `json:"issue_state,omitempty"`
 	IssueStateDetail *IssueStateDetail `json:"issue_state_detail,omitempty"`
@@ -79,6 +80,7 @@ type IssueRequest struct {
 	SecurityHole  string `json:"security_hole,omitempty"`  // 是否是私有issue(默认为false)
 	IssueStage    string `json:"issue_stage,omitempty"`    // 严重程序（Accepted,Coding,Completed,New,Rejected,Revising,Testing,Verified）
 	IssueSeverity string `json:"issue_severity,omitempty"` // 优先级 （Suggestion,Minor,Major,Fatal）
+	TemplatePath  string `json:"template_path,omitempty"`  // issue模板路径，即创建issue的类型
 }
 
 type IssueComment struct {
