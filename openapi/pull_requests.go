@@ -20,6 +20,9 @@ import (
 	"net/url"
 )
 
+// CreatePullRequest 创建Pull Request
+//
+// api Docs: https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-pulls
 func (s *PullRequestsService) CreatePullRequest(ctx context.Context, owner, repo string, prContent *PullRequestCreateRequest) (*PullRequest, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls", owner, repo)
 	req, err := newRequest(s.api, http.MethodPost, urlStr, prContent)
@@ -33,6 +36,7 @@ func (s *PullRequestsService) CreatePullRequest(ctx context.Context, owner, repo
 }
 
 // GetPullRequest 获取单个Pull Requests
+//
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number
 func (s *PullRequestsService) GetPullRequest(ctx context.Context, owner, repo, number string) (*PullRequest, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s", owner, repo, number)

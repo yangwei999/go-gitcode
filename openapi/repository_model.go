@@ -259,16 +259,12 @@ type RepositoryTag struct {
 
 // FileRequest 文件操作请求参数
 type FileRequest struct {
-	Content *string `json:"content"`
-	Message *string `json:"message"`
-	Branch  *string `json:"branch,omitempty"`
-	Sha     *string `json:"sha,omitempty"`
-	Author  *Author `json:"author,omitempty"`
-}
-
-type Author struct {
-	Name  string `json:"name,omitempty"`
-	Email string `json:"email,omitempty"`
+	Content     *string `json:"content"`
+	Message     *string `json:"message"`
+	Branch      *string `json:"branch,omitempty"`
+	Sha         *string `json:"sha,omitempty"`
+	AuthorName  *string `json:"author[name],omitempty"`
+	AuthorEmail *string `json:"author[email],omitempty"`
 }
 
 // FileCommitResponse 文件操作响应
