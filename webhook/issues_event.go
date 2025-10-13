@@ -29,6 +29,7 @@ type Project struct {
 
 type Attributes struct {
 	ID           *json.Number       `json:"id,omitempty"`
+	Title        *string            `json:"title,omitempty"`
 	Action       *string            `json:"action,omitempty"`
 	ActionDetail *string            `json:"update_reason,omitempty"`
 	State        *string            `json:"state,omitempty"`
@@ -188,4 +189,11 @@ func (iss *IssueEvent) GetRepoVisibility() *string {
 		return nil
 	}
 	return Visibility(iss.Repository.Visibility)
+}
+
+func (iss *IssueEvent) GetTitle() *string {
+	if iss.Attributes == nil {
+		return nil
+	}
+	return iss.Attributes.Title
 }

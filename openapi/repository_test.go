@@ -189,7 +189,7 @@ func updatePRSetting(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	urlStr := fmt.Sprintf("/repos/%s/%s/pull_request_settings", owner, repo)
 	mockResponse(t, mux, urlStr, nil)
 
-	ok, err := client.Repository.UpdateRepoPullRequestSetting(context.Background(), owner, repo)
+	ok, err := client.Repository.UpdateRepoPullRequestSetting(context.Background(), owner, repo, nil)
 	assert.Nil(t, err)
 	assert.True(t, ok)
 }

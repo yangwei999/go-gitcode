@@ -179,3 +179,10 @@ func (n *NoteEvent) GetRepoVisibility() *string {
 	}
 	return Visibility(n.Repository.Visibility)
 }
+
+func (n *NoteEvent) GetTitle() *string {
+	if n.Attributes == nil {
+		return nil
+	}
+	return n.Attributes.Title
+}
