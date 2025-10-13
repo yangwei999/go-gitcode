@@ -263,6 +263,12 @@ type FileRequest struct {
 	Message *string `json:"message"`
 	Branch  *string `json:"branch,omitempty"`
 	Sha     *string `json:"sha,omitempty"`
+	Author  *Author `json:"author,omitempty"`
+}
+
+type Author struct {
+	Name  string `json:"name,omitempty"`
+	Email string `json:"email,omitempty"`
 }
 
 // FileCommitResponse 文件操作响应

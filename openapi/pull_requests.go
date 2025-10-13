@@ -20,7 +20,7 @@ import (
 	"net/url"
 )
 
-func (s *PullRequestsService) CreatePullRequest(ctx context.Context, owner, repo string, prContent *PullRequestRequest) (*PullRequest, bool, error) {
+func (s *PullRequestsService) CreatePullRequest(ctx context.Context, owner, repo string, prContent *PullRequestCreateRequest) (*PullRequest, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls", owner, repo)
 	req, err := newRequest(s.api, http.MethodPost, urlStr, prContent)
 	if err != nil {
