@@ -81,6 +81,7 @@ type IssueRequest struct {
 	IssueStage    string `json:"issue_stage,omitempty"`    // 严重程序（Accepted,Coding,Completed,New,Rejected,Revising,Testing,Verified）
 	IssueSeverity string `json:"issue_severity,omitempty"` // 优先级 （Suggestion,Minor,Major,Fatal）
 	TemplatePath  string `json:"template_path,omitempty"`  // issue模板路径，即创建issue的类型
+	Status        string `json:"status,omitempty"`         // 自定义状态（待办的、进行中、已完成等），需企业版进行配置
 }
 
 type IssueComment struct {
