@@ -46,6 +46,31 @@ func (s *PullRequestsService) GetPullRequest(ctx context.Context, owner, repo, n
 	return pr, successGetData(resp), err
 }
 
+// ListPullRequests 获取仓库的Pull Request列表
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls
+func (s *PullRequestsService) ListPullRequests(ctx context.Context, owner, repo, page, state string) ([]*PullRequest, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/pulls", owner, repo)
+
+	params := &url.Values{
+		"page":     []string{page},
+		"per_page": []string{"100"},
+	}
+
+	if state != "" {
+		params.Add("state", state)
+	}
+
+	req, err := newRequest(s.api, http.MethodGet, urlStr, params, RequestHandler{t: Query})
+	if err != nil {
+		return nil, false, err
+	}
+
+	var prs []*PullRequest
+	resp, err := s.api.Do(ctx, req, &prs)
+	return prs, successGetData(resp), err
+}
+
 // UpdatePullRequest 更新Pull Request信息
 //
 // api Docs: https://docs.gitcode.com/docs/apis/patch-api-v-5-repos-owner-repo-pulls-number
