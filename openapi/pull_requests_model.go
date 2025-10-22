@@ -158,3 +158,24 @@ type PullRequestMergedResult struct {
 	Merged  *bool   `json:"merged,omitempty"`
 	Message *string `json:"message,omitempty"`
 }
+
+type PullRequestQueryRequest struct {
+	State           *string `json:"state,omitempty"`
+	Base            *string `json:"base,omitempty"`
+	Since           *string `json:"since,omitempty"`
+	Direction       *string `json:"direction,omitempty"`
+	Sort            *string `json:"sort,omitempty"`
+	MilestoneNumber *string `json:"milestone_number,omitempty"`
+	Labels          *string `json:"labels,omitempty"`
+	Page            *string `json:"page,omitempty"`
+	PerPage         *string `json:"per_page,omitempty"`
+	Author          *string `json:"author,omitempty"`
+	Assignee        *string `json:"assignee,omitempty"`
+	Reviewer        *string `json:"reviewer,omitempty"`
+	MergedAfter     *string `json:"merged_after,omitempty"`
+	MergedBefore    *string `json:"merged_before,omitempty"`
+	CreatedAfter    *string `json:"created_after,omitempty"`
+	CreatedBefore   *string `json:"created_before,omitempty"`
+	UpdatedBefore   *string `json:"updated_before,omitempty"`
+	UpdatedAfter    *string `json:"updated_after,omitempty"`
+}

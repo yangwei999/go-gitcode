@@ -53,19 +53,10 @@ func (s *PullRequestsService) GetPullRequest(ctx context.Context, owner, repo, n
 // ListPullRequests 获取仓库的Pull Request列表
 //
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls
-func (s *PullRequestsService) ListPullRequests(ctx context.Context, owner, repo, page, state string) ([]*PullRequest, bool, error) {
+func (s *PullRequestsService) ListPullRequests(ctx context.Context, owner, repo string, query *PullRequestQueryRequest) ([]*PullRequest, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls", owner, repo)
 
-	params := &url.Values{
-		"page":     []string{page},
-		"per_page": []string{"100"},
-	}
-
-	if state != "" {
-		params.Add("state", state)
-	}
-
-	req, err := newRequest(s.api, http.MethodGet, urlStr, params, RequestHandler{t: Query})
+	req, err := newRequest(s.api, http.MethodGet, urlStr, query, RequestHandler{t: Query})
 	if err != nil {
 		return nil, false, err
 	}
