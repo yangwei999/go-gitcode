@@ -70,17 +70,18 @@ type PullRequestLinks struct {
 }
 
 type IssueRequest struct {
-	Repository    string `json:"repo,omitempty"` // 仓库地址
-	Title         string `json:"title,omitempty"`
-	Body          string `json:"body,omitempty"`
-	Labels        string `json:"labels,omitempty"`   // 用逗号分开的标签
-	Assignee      string `json:"assignee,omitempty"` // Issue负责人的 username
-	State         string `json:"state,omitempty"`
-	Milestone     int64  `json:"milestone,omitempty"`
-	SecurityHole  string `json:"security_hole,omitempty"`  // 是否是私有issue(默认为false)
-	IssueStage    string `json:"issue_stage,omitempty"`    // 严重程序（Accepted,Coding,Completed,New,Rejected,Revising,Testing,Verified）
-	IssueSeverity string `json:"issue_severity,omitempty"` // 优先级 （Suggestion,Minor,Major,Fatal）
-	TemplatePath  string `json:"template_path,omitempty"`  // issue模板路径，即创建issue的类型
+	Repository    *string `json:"repo,omitempty"` // 仓库地址
+	Title         *string `json:"title,omitempty"`
+	Body          *string `json:"body,omitempty"`
+	Labels        *string `json:"labels,omitempty"`   // 用逗号分开的标签
+	Assignee      *string `json:"assignee,omitempty"` // Issue负责人的 username
+	State         *string `json:"state,omitempty"`
+	Milestone     *int    `json:"milestone,omitempty"`
+	SecurityHole  *string `json:"security_hole,omitempty"`  // 是否是私有issue(默认为false)
+	IssueSeverity *string `json:"issue_severity,omitempty"` // 优先级
+	TemplatePath  *string `json:"template_path,omitempty"`  // issue模板路径，即创建issue的类型
+	IssueType     *string `json:"issue_type,omitempty"`     // issue类型
+	IssueState    *string `json:"status,omitempty"`         // issue具体状态
 }
 
 type IssueComment struct {
