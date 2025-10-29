@@ -40,8 +40,11 @@ func (s *PullRequestsService) CreatePullRequestComment(ctx context.Context, owne
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-comments
 func (s *PullRequestsService) ListPullRequestComments(ctx context.Context, owner, repo, number, page, commentType string) ([]*PullRequestComment, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/comments", owner, repo, number)
-	req, err := newRequest(s.api, http.MethodGet, urlStr,
-		&url.Values{"page": []string{page}, "per_page": []string{"100"}, "comment_type": []string{commentType}}, RequestHandler{t: Query})
+	query := &url.Values{"page": []string{page}, "per_page": []string{"100"}}
+	if commentType != "" {
+		query.Set("type", commentType)
+	}
+	req, err := newRequest(s.api, http.MethodGet, urlStr, query, RequestHandler{t: Query})
 	if err != nil {
 		return nil, false, err
 	}
