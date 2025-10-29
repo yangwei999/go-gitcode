@@ -127,11 +127,14 @@ type SimpleComment struct {
 }
 
 type PullRequestComment struct {
-	ID        *json.Number `json:"id,omitempty"`
-	Body      *string      `json:"body,omitempty"`
-	User      *User        `json:"user,omitempty"`
-	CreatedAt *Timestamp   `json:"created_at,omitempty"`
-	UpdatedAt *Timestamp   `json:"updated_at,omitempty"`
+	ID           *json.Number `json:"id,omitempty"`
+	DiscussionID *string      `json:"discussion_id,omitempty"`
+	Body         *string      `json:"body,omitempty"`
+	User         *User        `json:"user,omitempty"`
+	CreatedAt    *Timestamp   `json:"created_at,omitempty"`
+	UpdatedAt    *Timestamp   `json:"updated_at,omitempty"`
+	CommentType  *string      `json:"comment_type,omitempty"`
+	Resolved     *bool        `json:"resolved,omitempty"`
 }
 
 type PullRequestCommentRequest struct {
