@@ -38,11 +38,14 @@ func (s *PullRequestsService) CreatePullRequestComment(ctx context.Context, owne
 // ListPullRequestComments 获取某个Pull Request的所有评论
 //
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-comments
-func (s *PullRequestsService) ListPullRequestComments(ctx context.Context, owner, repo, number, page, commentType string) ([]*PullRequestComment, bool, error) {
+func (s *PullRequestsService) ListPullRequestComments(ctx context.Context, owner, repo, number, page, direction, commentType string) ([]*PullRequestComment, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/comments", owner, repo, number)
 	query := &url.Values{"page": []string{page}, "per_page": []string{"100"}}
 	if commentType != "" {
 		query.Set("type", commentType)
+	}
+	if direction != "" {
+		query.Set("direction", direction)
 	}
 	req, err := newRequest(s.api, http.MethodGet, urlStr, query, RequestHandler{t: Query})
 	if err != nil {
