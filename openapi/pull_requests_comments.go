@@ -42,7 +42,7 @@ func (s *PullRequestsService) ListPullRequestComments(ctx context.Context, owner
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/comments", owner, repo, number)
 	query := &url.Values{"page": []string{page}, "per_page": []string{"100"}}
 	if commentType != "" {
-		query.Set("type", commentType)
+		query.Set("comment_type", commentType)
 	}
 	if direction != "" {
 		query.Set("direction", direction)
