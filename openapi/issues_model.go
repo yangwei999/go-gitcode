@@ -93,12 +93,20 @@ type IssueComment struct {
 	Target    *Issue       `json:"target,omitempty"`
 }
 
-type IssueSearch struct {
-	State     string `json:"state,omitempty"`
-	Labels    string `json:"labels,omitempty"`
-	Sort      string `json:"sort,omitempty"`
-	Direction string `json:"direction,omitempty"`
-	Page      int    `json:"page"`
-	PerPage   int    `json:"per_page"`
-	CreatedAt string `json:"created_at,omitempty"`
+type IssueQueryRequest struct {
+	State         *string `json:"state,omitempty"`
+	Labels        *string `json:"labels,omitempty"`
+	Sort          *string `json:"sort,omitempty"`
+	Direction     *string `json:"direction,omitempty"`
+	Since         *string `json:"since,omitempty"`
+	Milestone     *string `json:"milestone,omitempty"`
+	Page          *string `json:"page,omitempty"`
+	PerPage       *string `json:"per_page,omitempty"`
+	CreatedAt     *string `json:"created_at,omitempty"`
+	Creator       *string `json:"creator,omitempty"`
+	Assignee      *string `json:"assignee,omitempty"`
+	CreatedAfter  *string `json:"created_after,omitempty"`
+	CreatedBefore *string `json:"created_before,omitempty"`
+	UpdatedBefore *string `json:"updated_before,omitempty"`
+	UpdatedAfter  *string `json:"updated_after,omitempty"`
 }
