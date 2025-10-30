@@ -92,3 +92,13 @@ type IssueComment struct {
 	UpdatedAt *Timestamp   `json:"updated_at,omitempty"`
 	Target    *Issue       `json:"target,omitempty"`
 }
+
+type IssueSearch struct {
+	State     string `json:"state,omitempty"`
+	Labels    string `json:"labels,omitempty"`
+	Sort      string `json:"sort,omitempty"`
+	Direction string `json:"direction,omitempty"`
+	Page      int    `json:"page"`
+	PerPage   int    `json:"per_page"`
+	CreatedAt string `json:"created_at,omitempty"`
+}

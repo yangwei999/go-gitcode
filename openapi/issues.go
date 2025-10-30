@@ -78,3 +78,18 @@ func (s *IssuesService) GetIssue(ctx context.Context, owner, repo, number string
 	resp, err := s.api.Do(ctx, req, issue)
 	return issue, successGetData(resp), err
 }
+
+// AllIssues 获取仓库的所有issue
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-issues
+func (s *IssuesService) AllIssues(ctx context.Context, owner, repo string, search *IssueSearch) ([]*Issue, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/issues", owner, repo)
+	req, err := newRequest(s.api, http.MethodGet, urlStr, search)
+	if err != nil {
+		return nil, false, err
+	}
+
+	var issues []*Issue
+	resp, err := s.api.Do(ctx, req, issues)
+	return issues, successGetData(resp), err
+}
