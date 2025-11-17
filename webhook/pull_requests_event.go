@@ -17,6 +17,7 @@ import (
 	"encoding/json"
 	"github.com/opensourceways/go-gitcode/openapi"
 	"strconv"
+	"strings"
 )
 
 type PRPart struct {
@@ -76,6 +77,11 @@ func (pr *PullRequestEvent) GetOrg() *string {
 func (pr *PullRequestEvent) GetRepo() *string {
 	if pr.Repository == nil {
 		return nil
+	}
+
+	if pr.Repository.Path != nil && strings.Contains(*pr.Repository.Path, "/") {
+		repo := strings.Split(*pr.Repository.Path, "/")[1]
+		return &repo
 	}
 
 	return pr.Repository.Name

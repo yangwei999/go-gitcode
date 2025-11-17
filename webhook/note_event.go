@@ -16,6 +16,7 @@ package webhook
 import (
 	"github.com/opensourceways/go-gitcode/openapi"
 	"strconv"
+	"strings"
 )
 
 type NoteEvent struct {
@@ -68,6 +69,10 @@ func (n *NoteEvent) GetRepo() *string {
 		return nil
 	}
 
+	if n.Repository.Path != nil && strings.Contains(*n.Repository.Path, "/") {
+		repo := strings.Split(*n.Repository.Path, "/")[1]
+		return &repo
+	}
 	return n.Repository.Name
 }
 func (n *NoteEvent) GetHtmlURL() *string {

@@ -13,7 +13,10 @@
 // limitations under the License.
 package webhook
 
-import "github.com/opensourceways/go-gitcode/openapi"
+import (
+	"github.com/opensourceways/go-gitcode/openapi"
+	"strings"
+)
 
 type PushEvent struct {
 	UUID         *string            `json:"uuid,omitempty"`
@@ -46,6 +49,11 @@ func (p *PushEvent) GetOrg() *string {
 func (p *PushEvent) GetRepo() *string {
 	if p.Repository == nil {
 		return nil
+	}
+
+	if p.Repository.Path != nil && strings.Contains(*p.Repository.Path, "/") {
+		repo := strings.Split(*p.Repository.Path, "/")[1]
+		return &repo
 	}
 
 	return p.Repository.Name
