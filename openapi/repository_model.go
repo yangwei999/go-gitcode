@@ -47,17 +47,19 @@ type Repository struct {
 	Archived           *bool         `json:"archived,omitempty"`
 
 	// Additional mutable fields when creating and editing a repository
-	Public            *bool   `json:"public,omitempty"`
-	Private           *bool   `json:"private,omitempty"`
-	HasIssues         *bool   `json:"has_issues,omitempty"`
-	HasWiki           *bool   `json:"has_wiki,omitempty"`
-	HasPages          *bool   `json:"has_pages,omitempty"`
-	HasProjects       *bool   `json:"has_projects,omitempty"`
-	HasDownloads      *bool   `json:"has_downloads,omitempty"`
-	HasDiscussions    *bool   `json:"has_discussions,omitempty"`
-	IsTemplate        *bool   `json:"is_template,omitempty"`
-	LicenseTemplate   *string `json:"license_template,omitempty"`
-	GitignoreTemplate *string `json:"gitignore_template,omitempty"`
+	Public              *bool   `json:"public,omitempty"`
+	Private             *bool   `json:"private,omitempty"`
+	HasIssues           *bool   `json:"has_issues,omitempty"`
+	HasWiki             *bool   `json:"has_wiki,omitempty"`
+	HasPages            *bool   `json:"has_pages,omitempty"`
+	HasProjects         *bool   `json:"has_projects,omitempty"`
+	HasDownloads        *bool   `json:"has_downloads,omitempty"`
+	HasDiscussions      *bool   `json:"has_discussions,omitempty"`
+	IsTemplate          *bool   `json:"is_template,omitempty"`
+	LicenseTemplate     *string `json:"license_template,omitempty"`
+	GitignoreTemplate   *string `json:"gitignore_template,omitempty"`
+	IssueTemplateSource *string `json:"issue_template_source,omitempty"`
+	License             *string `json:"license,omitempty"`
 }
 
 type RepositoryCommit struct {
