@@ -71,12 +71,8 @@ func (s *RepositoryService) UpdateRepoFile(ctx context.Context, owner, repo, pat
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-contributors
 func (s *RepositoryService) GetRepoContributors(ctx context.Context, owner, repo, category string) ([]*Contributor, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/contributors", owner, repo)
-	var query url.Values
-	if category != "" {
-		query = url.Values{}
-		query.Set("type", category)
-	}
-	req, err := newRequest(s.api, http.MethodGet, urlStr, &query, RequestHandler{t: Query})
+	query := buildQuery(nil, "type", category)
+	req, err := newRequest(s.api, http.MethodGet, urlStr, query, RequestHandler{t: Query})
 	if err != nil {
 		return nil, false, err
 	}
@@ -199,10 +195,12 @@ func (s *RepositoryService) GetRepoCustomRoles(ctx context.Context, owner, repo 
 // GetRepoTrees 获取仓库目录Tree
 //
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-git-trees-sha
-func (s *RepositoryService) GetRepoTrees(ctx context.Context, owner, repo, sha, page, recursive string) (*RepositoryTree, bool, error) {
+func (s *RepositoryService) GetRepoTrees(ctx context.Context, owner, repo, sha, page, recursive, filePath string) (*RepositoryTree, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/git/trees/%s", owner, repo, sha)
-	req, err := newRequest(s.api, http.MethodGet, urlStr,
-		&url.Values{"page": []string{page}, "per_page": []string{"100"}, "recursive": []string{recursive}}, RequestHandler{t: Query})
+	query := pagedLimitQuery(page)
+	query = buildQuery(query, "recursive", recursive)
+	query = buildQuery(query, "file_path", filePath)
+	req, err := newRequest(s.api, http.MethodGet, urlStr, query, RequestHandler{t: Query})
 	if err != nil {
 		return nil, false, err
 	}

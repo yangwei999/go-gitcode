@@ -247,3 +247,23 @@ func (c *APIClient) BareDo(req *http.Request) (*http.Response, error) {
 	}
 	return resp, err
 }
+
+func buildQuery(q *url.Values, queryKey, queryValue string) *url.Values {
+	if q == nil || *q == nil {
+		q = &url.Values{}
+	}
+	if queryValue != "" {
+		q.Set(queryKey, queryValue)
+	}
+	return q
+}
+
+func pagedQuery(page, perPage string) *url.Values {
+	query := buildQuery(nil, "page", page)
+	query = buildQuery(query, "per_page", perPage)
+	return query
+}
+
+func pagedLimitQuery(page string) *url.Values {
+	return pagedQuery(page, "100")
+}
