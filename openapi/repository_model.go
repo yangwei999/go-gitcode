@@ -70,7 +70,6 @@ type RepositoryCommit struct {
 	Commit      *Commit     `json:"commit,omitempty"`
 	Author      *CommitUser `json:"author,omitempty"`
 	Committer   *CommitUser `json:"committer,omitempty"`
-	Parents     *Commit     `json:"parents,omitempty"`
 	HTMLURL     *string     `json:"html_url,omitempty"`
 	URL         *string     `json:"url,omitempty"`
 	CommentsURL *string     `json:"comments_url,omitempty"`
@@ -154,6 +153,7 @@ type Branch struct {
 	Name      *string           `json:"name,omitempty"`
 	Commit    *RepositoryCommit `json:"commit,omitempty"`
 	Protected *bool             `json:"protected,omitempty"`
+	Default   *bool             `json:"default,omitempty"`
 }
 
 type BranchRequest struct {
