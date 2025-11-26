@@ -13,6 +13,8 @@
 // limitations under the License.
 package openapi
 
+import "time"
+
 // Repository represents a GitHub repository.
 type Repository struct {
 	ID                 *int64        `json:"id,omitempty"`
@@ -273,4 +275,26 @@ type FileRequest struct {
 type FileCommitResponse struct {
 	Content *RepositoryContent `json:"content,omitempty"`
 	Commit  *RepositoryCommit  `json:"commit,omitempty"`
+}
+
+// MileStonesRequest 里程碑请求参数
+type MileStonesRequest struct {
+	State     *string `json:"state,omitempty"`
+	Sort      *string `json:"sort,omitempty"`
+	Direction *string `json:"direction,omitempty"`
+	Page      *int    `json:"page,omitempty"`
+	PerPage   *int    `json:"per_page,omitempty"`
+}
+
+type MileStonesResponse struct {
+	Number       *int       `json:"number,omitempty"`
+	Description  *string    `json:"description,omitempty"`
+	RepositoryId *int       `json:"repository_id,omitempty"`
+	OpenIssues   *int       `json:"open_issues,omitempty"`
+	ClosedIssues *int       `json:"closed_issues,omitempty"`
+	State        *string    `json:"state,omitempty"`
+	Title        *string    `json:"title,omitempty"`
+	Url          *string    `json:"url,omitempty"`
+	CreatedAt    *time.Time `json:"created_at,omitempty"`
+	UpdatedAt    *time.Time `json:"updated_at,omitempty"`
 }
