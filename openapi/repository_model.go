@@ -275,15 +275,6 @@ type FileCommitResponse struct {
 	Commit  *RepositoryCommit  `json:"commit,omitempty"`
 }
 
-// MileStonesRequest 里程碑请求参数
-type MileStonesRequest struct {
-	State     *string `json:"state,omitempty"`
-	Sort      *string `json:"sort,omitempty"`
-	Direction *string `json:"direction,omitempty"`
-	Page      *int    `json:"page,omitempty"`
-	PerPage   *int    `json:"per_page,omitempty"`
-}
-
 type MileStonesResponse struct {
 	Number       *int       `json:"number,omitempty"`
 	Description  *string    `json:"description,omitempty"`
