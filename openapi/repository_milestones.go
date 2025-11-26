@@ -17,19 +17,20 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 // GetRepoAllMilestones 获取仓库所有里程碑
 //
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-milestones
-func (s *RepositoryService) GetRepoAllMilestones(ctx context.Context, owner, repo string, request *MileStonesRequest) ([]*MileStonesResponse, bool, error) {
+func (s *RepositoryService) GetRepoAllMilestones(ctx context.Context, owner, repo string, request *url.Values) ([]*MileStonesResponse, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/milestones", owner, repo)
-	req, err := newRequest(s.api, http.MethodGet, urlStr, request)
+	req, err := newRequest(s.api, http.MethodGet, urlStr, request, RequestHandler{t: Query})
 	if err != nil {
 		return nil, false, err
 	}
 
 	var milestones []*MileStonesResponse
 	resp, err := s.api.Do(ctx, req, &milestones)
-	return milestones, successModified(resp), err
+	return milestones, successGetData(resp), err
 }

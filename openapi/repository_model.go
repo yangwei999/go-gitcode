@@ -13,8 +13,6 @@
 // limitations under the License.
 package openapi
 
-import "time"
-
 // Repository represents a GitHub repository.
 type Repository struct {
 	ID                 *int64        `json:"id,omitempty"`
@@ -295,6 +293,6 @@ type MileStonesResponse struct {
 	State        *string    `json:"state,omitempty"`
 	Title        *string    `json:"title,omitempty"`
 	Url          *string    `json:"url,omitempty"`
-	CreatedAt    *time.Time `json:"created_at,omitempty"`
-	UpdatedAt    *time.Time `json:"updated_at,omitempty"`
+	CreatedAt    *Timestamp `json:"created_at,omitempty"`
+	UpdatedAt    *Timestamp `json:"updated_at,omitempty"`
 }
