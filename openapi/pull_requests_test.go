@@ -60,8 +60,9 @@ func updatePR(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	urlStr := fmt.Sprintf("/repos/%s/%s/pulls/%s", owner, repo, number1)
 	mockResponse(t, mux, urlStr, want)
 
+	prState := "closed"
 	got, ok, err := client.PullRequests.UpdatePullRequest(context.Background(), owner, repo, number1, &PullRequestRequest{
-		State: "closed",
+		State: &prState,
 	})
 	assert.Nil(t, err)
 	assert.True(t, ok)
@@ -75,8 +76,9 @@ func updatePR(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	urlStr = fmt.Sprintf("/repos/%s/%s/pulls/%s", owner, repo, number1)
 	mockResponse(t, mux, urlStr, want1)
 
+	prState1 := "open"
 	got1, ok, err := client.PullRequests.UpdatePullRequest(context.Background(), owner, repo, number1, &PullRequestRequest{
-		State: "open",
+		State: &prState1,
 	})
 	assert.Nil(t, err)
 	assert.True(t, ok)

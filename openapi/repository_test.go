@@ -164,7 +164,7 @@ func getRepoTree(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	urlStr := fmt.Sprintf("/repos/%s/%s/git/trees/%s", owner, repo, branch)
 	mockResponse(t, mux, urlStr, want)
 
-	got, ok, err := client.Repository.GetRepoTrees(context.Background(), owner, repo, branch, page, "1")
+	got, ok, err := client.Repository.GetRepoTrees(context.Background(), owner, repo, branch, page, "1", "")
 	assert.Nil(t, err)
 	assert.True(t, ok)
 	assert.Equal(t, want, *got)

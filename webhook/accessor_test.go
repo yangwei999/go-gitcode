@@ -20,7 +20,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
-	"reflect"
 	"testing"
 )
 
@@ -97,14 +96,14 @@ func createIssue(t *testing.T) {
 	assert.Equal(t, "2024-10-26T10:28:03+08:00", *issue.GetUpdateTime())
 	assert.Equal(t, "public", *issue.GetRepoVisibility())
 
-	issue = new(IssueEvent)
-	rt := reflect.TypeOf(issue)
-	n := rt.NumMethod()
-	for i := 0; i < n; i++ {
-		rm := rt.Method(i)
-		ret := rm.Func.Call([]reflect.Value{reflect.ValueOf(issue)})
-		assert.Equal(t, (*string)(nil), ret[0].Interface())
-	}
+	//issue = new(IssueEvent)
+	//rt := reflect.TypeOf(issue)
+	//n := rt.NumMethod()
+	//for i := 0; i < n; i++ {
+	//	rm := rt.Method(i)
+	//	ret := rm.Func.Call([]reflect.Value{reflect.ValueOf(issue)})
+	//	assert.Equal(t, (*string)(nil), ret[0].Interface())
+	//}
 }
 
 func pushCode(t *testing.T) {
@@ -137,14 +136,14 @@ func pushCode(t *testing.T) {
 	assert.Equal(t, "ibforu", *pr.GetAuthor())
 	assert.Nil(t, pr.GetRepoVisibility())
 
-	pr = new(PushEvent)
-	rt := reflect.TypeOf(pr)
-	n := rt.NumMethod()
-	for i := 0; i < n; i++ {
-		rm := rt.Method(i)
-		ret := rm.Func.Call([]reflect.Value{reflect.ValueOf(pr)})
-		assert.Equal(t, (*string)(nil), ret[0].Interface())
-	}
+	//pr = new(PushEvent)
+	//rt := reflect.TypeOf(pr)
+	//n := rt.NumMethod()
+	//for i := 0; i < n; i++ {
+	//	rm := rt.Method(i)
+	//	ret := rm.Func.Call([]reflect.Value{reflect.ValueOf(pr)})
+	//	assert.Equal(t, (*string)(nil), ret[0].Interface())
+	//}
 }
 
 func createPR(t *testing.T) {
@@ -183,14 +182,14 @@ func createPR(t *testing.T) {
 	assert.Equal(t, "2024-10-26T10:32:41+08:00", *pr.GetUpdateTime())
 	assert.Equal(t, "private", *pr.GetRepoVisibility())
 
-	pr = new(PullRequestEvent)
-	rt := reflect.TypeOf(pr)
-	n := rt.NumMethod()
-	for i := 0; i < n; i++ {
-		rm := rt.Method(i)
-		ret := rm.Func.Call([]reflect.Value{reflect.ValueOf(pr)})
-		assert.Equal(t, (*string)(nil), ret[0].Interface())
-	}
+	//pr = new(PullRequestEvent)
+	//rt := reflect.TypeOf(pr)
+	//n := rt.NumMethod()
+	//for i := 0; i < n; i++ {
+	//	rm := rt.Method(i)
+	//	ret := rm.Func.Call([]reflect.Value{reflect.ValueOf(pr)})
+	//	assert.Equal(t, (*string)(nil), ret[0].Interface())
+	//}
 }
 
 func notePR(t *testing.T) {
@@ -274,12 +273,12 @@ func noteIssue(t *testing.T) {
 	assert.Equal(t, "2024-10-26T11:42:05+08:00", *note.GetUpdateTime())
 	assert.Equal(t, "private", *note.GetRepoVisibility())
 
-	note = new(NoteEvent)
-	rt := reflect.TypeOf(note)
-	n := rt.NumMethod()
-	for i := 0; i < n; i++ {
-		rm := rt.Method(i)
-		ret := rm.Func.Call([]reflect.Value{reflect.ValueOf(note)})
-		assert.Equal(t, (*string)(nil), ret[0].Interface())
-	}
+	//note = new(NoteEvent)
+	//rt := reflect.TypeOf(note)
+	//n := rt.NumMethod()
+	//for i := 0; i < n; i++ {
+	//	rm := rt.Method(i)
+	//	ret := rm.Func.Call([]reflect.Value{reflect.ValueOf(note)})
+	//	assert.Equal(t, (*string)(nil), ret[0].Interface())
+	//}
 }

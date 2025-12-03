@@ -59,9 +59,11 @@ func updateIssue(t *testing.T, client *APIClient, mux *http.ServeMux, want Issue
 
 	urlStr := fmt.Sprintf("/repos/%s/issues/%s", owner, number)
 	mockResponse(t, mux, urlStr, want)
+	repo11 := repo
+	issue11 := "issue1"
 	got, ok, err := client.Issues.UpdateIssue(context.Background(), owner, number, &IssueRequest{
-		Repository: repo,
-		Title:      "issue1",
+		Repository: &repo11,
+		Title:      &issue11,
 	})
 	assert.Nil(t, err)
 	assert.True(t, ok)
@@ -72,9 +74,11 @@ func updateIssue(t *testing.T, client *APIClient, mux *http.ServeMux, want Issue
 	mux.HandleFunc(urlStr, func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, errMsg, http.StatusBadRequest)
 	})
+	repo22 := repo
+	issue22 := "issue2"
 	got, ok, err = client.Issues.UpdateIssue(context.Background(), owner, "2", &IssueRequest{
-		Repository: repo,
-		Title:      "issue2",
+		Repository: &repo22,
+		Title:      &issue22,
 	})
 	assert.Equal(t, false, ok)
 	assert.Equal(t, Issue{}, *got)

@@ -58,7 +58,7 @@ func getPRComments(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	mockResponse(t, mux, urlStr, want)
 
 	ctx := context.Background()
-	got, ok, err := client.PullRequests.ListPullRequestComments(ctx, owner, repo, number, page, "pr_comment")
+	got, ok, err := client.PullRequests.ListPullRequestComments(ctx, owner, repo, number, page, "pr_comment", "")
 	assert.Nil(t, err)
 	assert.True(t, ok)
 

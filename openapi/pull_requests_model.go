@@ -88,34 +88,22 @@ type MergeRequestSetting struct {
 }
 
 type PullRequestRequest struct {
-	ID              int64       `json:"id,omitempty"`
-	Title           string      `json:"title,omitempty"`
-	Body            string      `json:"body,omitempty"`
-	State           string      `json:"state,omitempty"`
-	Labels          string      `json:"labels,omitempty"`
-	MilestoneNumber string      `json:"milestone_number,omitempty"`
-	Draft           string      `json:"draft,omitempty"`
-	User            User        `json:"user,omitempty"`
-	Target          PullRequest `json:"target,omitempty"`
-}
+	Title               *string `json:"title"`
+	Head                *string `json:"head"`
+	Base                *string `json:"base"`
+	Body                *string `json:"body,omitempty"`
+	MilestoneNumber     *string `json:"milestone_number,omitempty"`
+	Labels              *string `json:"labels,omitempty"`
+	Issue               *string `json:"issue,omitempty"`
+	Assignees           *string `json:"assignees,omitempty"`
+	Testers             *string `json:"testers,omitempty"`
+	PruneSourceBranch   *bool   `json:"prune_source_branch,omitempty"`
+	Draft               *bool   `json:"draft,omitempty"`
+	Squash              *bool   `json:"squash,omitempty"`
+	SquashCommitMessage *string `json:"squash_commit_message,omitempty"`
+	ForkPath            *string `json:"fork_path,omitempty"` // fork项目路径【owner/repo】，跨仓PR 必填。
 
-// PullRequestCreateRequest 创建PR的请求参数
-type PullRequestCreateRequest struct {
-	Title               string `json:"title"`
-	Head                string `json:"head"`
-	Base                string `json:"base"`
-	Body                string `json:"body,omitempty"`
-	MilestoneNumber     string `json:"milestone_number,omitempty"`
-	Labels              string `json:"labels,omitempty"`
-	Issue               string `json:"issue,omitempty"`
-	Assignees           string `json:"assignees,omitempty"`
-	Testers             string `json:"testers,omitempty"`
-	PruneSourceBranch   bool   `json:"prune_source_branch,omitempty"`
-	Draft               bool   `json:"draft,omitempty"`
-	Squash              bool   `json:"squash,omitempty"`
-	SquashCommitMessage string `json:"squash_commit_message,omitempty"`
-	ForkPath            string `json:"fork_path,omitempty"` // fork项目路径【owner/repo】，跨仓PR 必填。
-
+	State *string `json:"state,omitempty"`
 }
 
 type PullRequestRequestMerge struct {
@@ -162,23 +150,6 @@ type PullRequestMergedResult struct {
 	Message *string `json:"message,omitempty"`
 }
 
-type PullRequestQueryRequest struct {
-	State           *string `json:"state,omitempty"`
-	Base            *string `json:"base,omitempty"`
-	Since           *string `json:"since,omitempty"`
-	Direction       *string `json:"direction,omitempty"`
-	Sort            *string `json:"sort,omitempty"`
-	MilestoneNumber *string `json:"milestone_number,omitempty"`
-	Labels          *string `json:"labels,omitempty"`
-	Page            *string `json:"page,omitempty"`
-	PerPage         *string `json:"per_page,omitempty"`
-	Author          *string `json:"author,omitempty"`
-	Assignee        *string `json:"assignee,omitempty"`
-	Reviewer        *string `json:"reviewer,omitempty"`
-	MergedAfter     *string `json:"merged_after,omitempty"`
-	MergedBefore    *string `json:"merged_before,omitempty"`
-	CreatedAfter    *string `json:"created_after,omitempty"`
-	CreatedBefore   *string `json:"created_before,omitempty"`
-	UpdatedBefore   *string `json:"updated_before,omitempty"`
-	UpdatedAfter    *string `json:"updated_after,omitempty"`
+type PullRequestAssigneesRequest struct {
+	ResetAll *bool `json:"reset_all,omitempty"`
 }

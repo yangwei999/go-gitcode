@@ -39,9 +39,11 @@ func TestNewRequestError(t *testing.T) {
 	targetLabels, ok, err := client.Issues.ListRepoIssueLabels(context.Background(), owner, repo)
 	compare(t, ok, err, mockErr, targetLabels)
 
+	repo11 := repo
+	issue11 := "issue1"
 	issue, ok, err := client.Issues.UpdateIssue(context.Background(), owner, "2", &IssueRequest{
-		Repository: repo,
-		Title:      "issue1",
+		Repository: &repo11,
+		Title:      &issue11,
 	})
 	compare(t, ok, err, mockErr, issue)
 
@@ -79,8 +81,9 @@ func TestNewRequestError(t *testing.T) {
 	result4, ok, err := client.PullRequests.GetPullRequest(context.Background(), owner, repo, number)
 	compare(t, ok, err, mockErr, result4)
 
+	prState := "open"
 	result5, ok, err := client.PullRequests.UpdatePullRequest(context.Background(), owner, repo, number, &PullRequestRequest{
-		State: "open",
+		State: &prState,
 	})
 	compare(t, ok, err, mockErr, result5)
 
@@ -131,7 +134,7 @@ func TestNewRequestError(t *testing.T) {
 	result18, ok, err := client.PullRequests.MergePullRequest(context.Background(), owner, repo, number, "merge")
 	compare(t, ok, err, mockErr, result18)
 
-	result19, ok, err := client.PullRequests.ListPullRequestComments(context.Background(), owner, repo, number, page, "pr_comment")
+	result19, ok, err := client.PullRequests.ListPullRequestComments(context.Background(), owner, repo, number, page, "pr_comment", "")
 	compare(t, ok, err, mockErr, result19)
 
 	ok, err = client.PullRequests.UpdatePullRequestComment(context.Background(), owner, repo, commentID, comment)
@@ -184,7 +187,7 @@ func TestNewRequestError(t *testing.T) {
 	result28, ok, err := client.Repository.GetRepoCustomRoles(context.Background(), owner, repo)
 	compare(t, ok, err, mockErr, result28)
 
-	result29, ok, err := client.Repository.GetRepoTrees(context.Background(), owner, repo, "124543", page, "")
+	result29, ok, err := client.Repository.GetRepoTrees(context.Background(), owner, repo, "124543", page, "", "")
 	compare(t, ok, err, mockErr, result29)
 
 	result30, ok, err := client.Repository.GetRepoFileList(context.Background(), owner, repo, "v0", "OWN")
