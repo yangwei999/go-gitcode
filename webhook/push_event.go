@@ -77,8 +77,14 @@ func (p *PushEvent) GetNumber() *string {
 func (p *PushEvent) GetID() *string {
 	return nil
 }
+func (p *PushEvent) GetAuthorID() *string {
+	return nil
+}
 func (p *PushEvent) GetAuthor() *string {
 	return p.Author
+}
+func (p *PushEvent) GetAuthorEmail() *string {
+	return nil
 }
 func (p *PushEvent) GetCommentID() *string {
 	return nil

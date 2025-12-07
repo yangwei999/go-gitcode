@@ -141,11 +141,24 @@ func (iss *IssueEvent) GetID() *string {
 
 	return nil
 }
+func (iss *IssueEvent) GetAuthorID() *string {
+	if iss.User == nil || iss.User.ID == nil {
+		return nil
+	}
+	userId := strconv.FormatInt(*iss.User.ID, 10)
+	return &userId
+}
 func (iss *IssueEvent) GetAuthor() *string {
 	if iss.User == nil {
 		return nil
 	}
 	return iss.User.UserName
+}
+func (iss *IssueEvent) GetAuthorEmail() *string {
+	if iss.User == nil {
+		return nil
+	}
+	return iss.User.Email
 }
 func (iss *IssueEvent) GetCommentID() *string {
 	return nil

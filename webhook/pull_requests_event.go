@@ -125,12 +125,26 @@ func (pr *PullRequestEvent) GetID() *string {
 
 	return nil
 }
+func (pr *PullRequestEvent) GetAuthorID() *string {
+	if pr.User == nil || pr.User.ID == nil {
+		return nil
+	}
+	userId := strconv.FormatInt(*pr.User.ID, 10)
+	return &userId
+}
 func (pr *PullRequestEvent) GetAuthor() *string {
 	if pr.User == nil {
 		return nil
 	}
 
 	return pr.User.UserName
+}
+
+func (pr *PullRequestEvent) GetAuthorEmail() *string {
+	if pr.User == nil {
+		return nil
+	}
+	return pr.User.Email
 }
 func (pr *PullRequestEvent) GetCommentID() *string {
 	return nil
