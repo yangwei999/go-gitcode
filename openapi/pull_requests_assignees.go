@@ -27,7 +27,7 @@ import (
 // api Docs: https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-assignees
 func (s *PullRequestsService) UpdatePRAssignees(ctx context.Context, owner, repo, number, assignees string) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/assignees", owner, repo, number)
-	req, err := newRequest(s.api, http.MethodPost, urlStr, PullRequestRequest{
+	req, err := newRequest(s.api, http.MethodPost, urlStr, &PullRequestRequest{
 		Assignees: &assignees,
 	})
 	if err != nil {
@@ -61,6 +61,41 @@ func (s *PullRequestsService) ResetPRAssigneesStatus(ctx context.Context, owner,
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/assignees", owner, repo, number)
 	req, err := newRequest(s.api, http.MethodPatch, urlStr, &PullRequestAssigneesRequest{
 		ResetAll: &all,
+	})
+	if err != nil {
+		return false, err
+	}
+
+	pr := new(PullRequest)
+	resp, err := s.api.Do(ctx, req, pr)
+	return successModified(resp), err
+}
+
+// UpdatePRReviewers 指派用户评审Pull Request
+//
+// api Docs: https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-approval-reviewers
+func (s *PullRequestsService) UpdatePRReviewers(ctx context.Context, owner, repo, number, reviewers string, reviewerMode bool) (bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/reviewers", owner, repo, number)
+	req, err := newRequest(s.api, http.MethodPost, urlStr, &PullRequestRequest{
+		Reviewers:     &reviewers,
+		ReviewersMode: &reviewerMode,
+	})
+	if err != nil {
+		return false, err
+	}
+
+	pr := new(PullRequest)
+	resp, err := s.api.Do(ctx, req, pr)
+	return successModified(resp), err
+}
+
+// RemovePRReviewers 取消用户评审Pull Request
+//
+// api Docs: https://docs.gitcode.com/docs/apis/delete-api-v-5-repos-owner-repo-pulls-number-approval-reviewers
+func (s *PullRequestsService) RemovePRReviewers(ctx context.Context, owner, repo, number, reviewers string) (bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/reviewers", owner, repo, number)
+	req, err := newRequest(s.api, http.MethodDelete, urlStr, &PullRequestRequest{
+		Reviewers: &reviewers,
 	})
 	if err != nil {
 		return false, err

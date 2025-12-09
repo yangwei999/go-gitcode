@@ -97,13 +97,15 @@ type PullRequestRequest struct {
 	Issue               *string `json:"issue,omitempty"`
 	Assignees           *string `json:"assignees,omitempty"`
 	Testers             *string `json:"testers,omitempty"`
+	Reviewers           *string `json:"reviewers,omitempty"`
 	PruneSourceBranch   *bool   `json:"prune_source_branch,omitempty"`
 	Draft               *bool   `json:"draft,omitempty"`
 	Squash              *bool   `json:"squash,omitempty"`
 	SquashCommitMessage *string `json:"squash_commit_message,omitempty"`
 	ForkPath            *string `json:"fork_path,omitempty"` // fork项目路径【owner/repo】，跨仓PR 必填。
 
-	State *string `json:"state,omitempty"`
+	State         *string `json:"state,omitempty"`
+	ReviewersMode *bool   `json:"add,omitempty"`
 }
 
 type PullRequestRequestMerge struct {
