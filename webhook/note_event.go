@@ -127,11 +127,7 @@ func (n *NoteEvent) GetNumber() *string {
 	return nil
 }
 func (n *NoteEvent) GetAuthorID() *string {
-	if n.User == nil || n.User.ID == nil {
-		return nil
-	}
-	userId := strconv.FormatInt(*n.User.ID, 10)
-	return &userId
+	return nil
 }
 func (n *NoteEvent) GetAuthor() *string {
 	if n.Issue != nil && n.Issue.Author != nil {
