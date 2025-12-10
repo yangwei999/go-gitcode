@@ -72,24 +72,40 @@ type PullRequestBranch struct {
 }
 
 type MergeAbleState struct {
-	MergeRequestID *int64 `json:"merge_request_id,omitempty"`
-	State          *bool  `json:"state,omitempty"`
-	ConflictPassed *bool  `json:"conflict_passed,omitempty"`
-	ReviewersPass  *bool  `json:"approval_reviewers_required_passed,omitempty"`
-	AssigneesPass  *bool  `json:"approval_approvers_required_passed,omitempty"`
-	TestersPass    *bool  `json:"approval_testers_required_passed,omitempty"`
+	MergeRequestID          *int64               `json:"merge_request_id,omitempty"`
+	State                   *bool                `json:"state,omitempty"`
+	ConflictPassed          *bool                `json:"conflict_passed,omitempty"`
+	ReviewersPass           *bool                `json:"approval_reviewers_required_passed,omitempty"`
+	AssigneesPass           *bool                `json:"approval_approvers_required_passed,omitempty"`
+	TestersPass             *bool                `json:"approval_testers_required_passed,omitempty"`
+	ResolveDiscussionPassed *bool                `json:"resolve_discussion_passed,omitempty"`
+	PRSetting               *MergeRequestSetting `json:"merge_request_switch,omitempty"`
+}
+
+type MergeRequestSetting struct {
+	MergeMethod                               *string `json:"merge_method,omitempty"`
+	OnlyAllowMergeIfAllDiscussionsAreResolved *bool   `json:"only_allow_merge_if_all_discussions_are_resolved,omitempty"`
 }
 
 type PullRequestRequest struct {
-	ID              int64       `json:"id,omitempty"`
-	Title           string      `json:"title,omitempty"`
-	Body            string      `json:"body,omitempty"`
-	State           string      `json:"state,omitempty"`
-	Labels          string      `json:"labels,omitempty"`
-	MilestoneNumber string      `json:"milestone_number,omitempty"`
-	Draft           string      `json:"draft,omitempty"`
-	User            User        `json:"user,omitempty"`
-	Target          PullRequest `json:"target,omitempty"`
+	Title               *string `json:"title"`
+	Head                *string `json:"head"`
+	Base                *string `json:"base"`
+	Body                *string `json:"body,omitempty"`
+	MilestoneNumber     *string `json:"milestone_number,omitempty"`
+	Labels              *string `json:"labels,omitempty"`
+	Issue               *string `json:"issue,omitempty"`
+	Assignees           *string `json:"assignees,omitempty"`
+	Testers             *string `json:"testers,omitempty"`
+	Reviewers           *string `json:"reviewers,omitempty"`
+	PruneSourceBranch   *bool   `json:"prune_source_branch,omitempty"`
+	Draft               *bool   `json:"draft,omitempty"`
+	Squash              *bool   `json:"squash,omitempty"`
+	SquashCommitMessage *string `json:"squash_commit_message,omitempty"`
+	ForkPath            *string `json:"fork_path,omitempty"` // fork项目路径【owner/repo】，跨仓PR 必填。
+
+	State         *string `json:"state,omitempty"`
+	ReviewersMode *bool   `json:"add,omitempty"`
 }
 
 type PullRequestRequestMerge struct {
@@ -101,11 +117,14 @@ type SimpleComment struct {
 }
 
 type PullRequestComment struct {
-	ID        *json.Number `json:"id,omitempty"`
-	Body      *string      `json:"body,omitempty"`
-	User      *User        `json:"user,omitempty"`
-	CreatedAt *Timestamp   `json:"created_at,omitempty"`
-	UpdatedAt *Timestamp   `json:"updated_at,omitempty"`
+	ID           *json.Number `json:"id,omitempty"`
+	DiscussionID *string      `json:"discussion_id,omitempty"`
+	Body         *string      `json:"body,omitempty"`
+	User         *User        `json:"user,omitempty"`
+	CreatedAt    *Timestamp   `json:"created_at,omitempty"`
+	UpdatedAt    *Timestamp   `json:"updated_at,omitempty"`
+	CommentType  *string      `json:"comment_type,omitempty"`
+	Resolved     *bool        `json:"resolved,omitempty"`
 }
 
 type PullRequestCommentRequest struct {
@@ -131,4 +150,8 @@ type PullRequestMergedResult struct {
 	SHA     *string `json:"sha,omitempty"`
 	Merged  *bool   `json:"merged,omitempty"`
 	Message *string `json:"message,omitempty"`
+}
+
+type PullRequestAssigneesRequest struct {
+	ResetAll *bool `json:"reset_all,omitempty"`
 }

@@ -116,3 +116,19 @@ func (s *RepositoryService) RemoveRepoBranchProtectedRule(ctx context.Context, o
 	resp, err := s.api.Do(ctx, req, nil)
 	return successModified(resp), err
 }
+
+// ListRepoAllTag 列出项目所有的tags
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-tags
+func (s *RepositoryService) ListRepoAllTag(ctx context.Context, owner, repo, page string) ([]*RepositoryTag, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/tags", owner, repo)
+	req, err := newRequest(s.api, http.MethodGet, urlStr,
+		&url.Values{"page": []string{page}, "per_page": []string{"100"}}, RequestHandler{t: Query})
+	if err != nil {
+		return nil, false, err
+	}
+
+	var tags []*RepositoryTag
+	resp, err := s.api.Do(ctx, req, &tags)
+	return tags, successCreated(resp), err
+}

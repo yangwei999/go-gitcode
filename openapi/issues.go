@@ -17,6 +17,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 // CreateIssue 创建Issue
@@ -77,4 +78,19 @@ func (s *IssuesService) GetIssue(ctx context.Context, owner, repo, number string
 	issue := new(Issue)
 	resp, err := s.api.Do(ctx, req, issue)
 	return issue, successGetData(resp), err
+}
+
+// ListRepoIssues 获取仓库的所有issue
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-issues
+func (s *IssuesService) ListRepoIssues(ctx context.Context, owner, repo string, search *url.Values) ([]*Issue, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/issues", owner, repo)
+	req, err := newRequest(s.api, http.MethodGet, urlStr, search, RequestHandler{t: Query})
+	if err != nil {
+		return nil, false, err
+	}
+
+	var issues []*Issue
+	resp, err := s.api.Do(ctx, req, &issues)
+	return issues, successGetData(resp), err
 }

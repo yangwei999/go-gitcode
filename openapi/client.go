@@ -39,6 +39,7 @@ type APIClient struct {
 	Repository   *RepositoryService
 	User         *UserService
 	Org          *OrganizationService
+	Dashboard    *DashboardService
 }
 
 // roundTripperFunc creates a RoundTripper (transport)
@@ -74,6 +75,7 @@ func NewAPIClientWithAuthorization(token []byte) *APIClient {
 	c.Repository = (*RepositoryService)(&c.common)
 	c.User = (*UserService)(&c.common)
 	c.Org = (*OrganizationService)(&c.common)
+	c.Dashboard = (*DashboardService)(&c.common)
 
 	return c
 }
@@ -127,45 +129,69 @@ func newRequest(c *APIClient, method, urlStr string, body any, handlers ...Reque
 }
 
 func (c *APIClient) Do(ctx context.Context, req *http.Request, receiver any) (*http.Response, error) {
-
-	if receiver != nil && reflect.TypeOf(receiver).Kind() != reflect.Pointer {
-		return nil, errorRespReceiverNotAnPointer
+	var err error
+	if err = preCheckReq(ctx, receiver); err != nil {
+		return nil, err
 	}
 
 	var resp *http.Response
-	var err error
 
 	retry := 3
 	for i := 1; i <= retry; i++ {
-		resp, err = c.BareDo(ctx, req)
-		if resp != nil && resp.StatusCode <= http.StatusUnavailableForLegalReasons {
+		reqCopy := req.Clone(ctx)
+		if req.Body != nil {
+			reqCopy.Body, err = req.GetBody()
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		resp, err = c.BareDo(reqCopy)
+		if resp != nil && resp.StatusCode <= http.StatusPreconditionRequired {
 			break
 		}
-		time.Sleep(time.Duration(i) * time.Second)
+		time.Sleep(time.Second)
 	}
-	if err == nil && resp != nil && resp.StatusCode >= http.StatusMultipleChoices {
-		var str strings.Builder
-		_, _ = io.Copy(&str, resp.Body)
-		err = errors.New(str.String())
-		_ = resp.Body.Close()
-	}
+
 	if err != nil {
 		return resp, err
 	}
 
-	return parseResp(resp, receiver)
+	return parseResp(req, resp, receiver)
 }
 
-func parseResp(resp *http.Response, receiver any) (*http.Response, error) {
-	defer func() {
-		_ = resp.Body.Close()
-	}()
-
-	if receiver == nil {
-		return resp, nil
+func preCheckReq(ctx context.Context, receiver any) error {
+	if ctx == nil {
+		return errorContentIsNil
 	}
 
-	err := json.NewDecoder(resp.Body).Decode(receiver)
+	if receiver != nil && reflect.TypeOf(receiver).Kind() != reflect.Pointer {
+		return errorRespReceiverNotAnPointer
+	}
+
+	return nil
+}
+
+func parseResp(req *http.Request, resp *http.Response, receiver any) (*http.Response, error) {
+	defer func() {
+		_ = resp.Body.Close()
+		if req.Body != nil {
+			_ = req.Body.Close()
+		}
+	}()
+
+	var err error
+	if resp != nil && resp.StatusCode >= http.StatusMultipleChoices {
+		var str strings.Builder
+		_, _ = io.Copy(&str, resp.Body)
+		err = errors.New(str.String())
+	}
+
+	if err != nil || receiver == nil {
+		return resp, err
+	}
+
+	err = json.NewDecoder(resp.Body).Decode(receiver)
 	if err == io.EOF {
 		err = nil // ignore EOF errors caused by empty response body
 	}
@@ -206,12 +232,8 @@ func successModified(resp *http.Response) bool {
 		resp.StatusCode == http.StatusAccepted || resp.StatusCode == http.StatusNoContent)
 }
 
-func (c *APIClient) BareDo(ctx context.Context, req *http.Request) (*http.Response, error) {
-	if ctx == nil {
-		return nil, errorContentIsNil
-	}
-	req = req.WithContext(ctx)
-
+func (c *APIClient) BareDo(req *http.Request) (*http.Response, error) {
+	ctx := req.Context()
 	resp, err := c.client.Do(req)
 	if err != nil {
 		// canceled or times out, ctx.Err() will be returned
@@ -224,4 +246,24 @@ func (c *APIClient) BareDo(ctx context.Context, req *http.Request) (*http.Respon
 		return nil, err
 	}
 	return resp, err
+}
+
+func buildQuery(q *url.Values, queryKey, queryValue string) *url.Values {
+	if q == nil || *q == nil {
+		q = &url.Values{}
+	}
+	if queryValue != "" {
+		q.Set(queryKey, queryValue)
+	}
+	return q
+}
+
+func pagedQuery(page, perPage string) *url.Values {
+	query := buildQuery(nil, "page", page)
+	query = buildQuery(query, "per_page", perPage)
+	return query
+}
+
+func pagedLimitQuery(page string) *url.Values {
+	return pagedQuery(page, "100")
 }

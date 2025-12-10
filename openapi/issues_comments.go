@@ -40,8 +40,14 @@ func (s *IssuesService) CreateIssueComment(ctx context.Context, owner, repo, num
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-issues-number-comments
 func (s *IssuesService) ListIssueComments(ctx context.Context, owner, repo, number, page, order, since string) ([]*IssueComment, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/issues/%s/comments", owner, repo, number)
-	req, err := newRequest(s.api, http.MethodGet, urlStr,
-		&url.Values{"page": []string{page}, "per_page": []string{"100"}, "order": []string{order}, "since": []string{since}}, RequestHandler{t: Query})
+	query := &url.Values{"page": []string{page}, "per_page": []string{"100"}}
+	if order != "" {
+		query.Set("order", order)
+	}
+	if since != "" {
+		query.Set("since", since)
+	}
+	req, err := newRequest(s.api, http.MethodGet, urlStr, query, RequestHandler{t: Query})
 	if err != nil {
 		return nil, false, err
 	}

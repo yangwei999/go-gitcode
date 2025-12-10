@@ -21,17 +21,58 @@ import (
 	"strconv"
 )
 
+// GetRepo 获取仓库信息
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo
+func (s *RepositoryService) GetRepo(ctx context.Context, owner, repo string) (*Repository, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s", owner, repo)
+	req, err := newRequest(s.api, http.MethodGet, urlStr, nil)
+	if err != nil {
+		return nil, false, err
+	}
+
+	repository := new(Repository)
+	resp, err := s.api.Do(ctx, req, repository)
+	return repository, successGetData(resp), err
+}
+
+// CreateRepoFile 新建文件
+//
+// api Docs: https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-contents-path
+func (s *RepositoryService) CreateRepoFile(ctx context.Context, owner, repo, path string, fileContent *FileRequest) (*FileCommitResponse, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/contents/%s", owner, repo, path)
+	req, err := newRequest(s.api, http.MethodPost, urlStr, fileContent)
+	if err != nil {
+		return nil, false, err
+	}
+
+	fileResp := new(FileCommitResponse)
+	resp, err := s.api.Do(ctx, req, fileResp)
+	return fileResp, successCreated(resp), err
+}
+
+// UpdateRepoFile 更新文件
+//
+// api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-contents-path
+func (s *RepositoryService) UpdateRepoFile(ctx context.Context, owner, repo, path string, fileContent *FileRequest) (*FileCommitResponse, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/contents/%s", owner, repo, path)
+	req, err := newRequest(s.api, http.MethodPut, urlStr, fileContent)
+	if err != nil {
+		return nil, false, err
+	}
+
+	fileResp := new(FileCommitResponse)
+	resp, err := s.api.Do(ctx, req, fileResp)
+	return fileResp, successModified(resp), err
+}
+
 // GetRepoContributors 获取仓库贡献者
 //
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-contributors
 func (s *RepositoryService) GetRepoContributors(ctx context.Context, owner, repo, category string) ([]*Contributor, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/contributors", owner, repo)
-	var query url.Values
-	if category != "" {
-		query = url.Values{}
-		query.Set("type", category)
-	}
-	req, err := newRequest(s.api, http.MethodGet, urlStr, &query, RequestHandler{t: Query})
+	query := buildQuery(nil, "type", category)
+	req, err := newRequest(s.api, http.MethodGet, urlStr, query, RequestHandler{t: Query})
 	if err != nil {
 		return nil, false, err
 	}
@@ -154,10 +195,12 @@ func (s *RepositoryService) GetRepoCustomRoles(ctx context.Context, owner, repo 
 // GetRepoTrees 获取仓库目录Tree
 //
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-git-trees-sha
-func (s *RepositoryService) GetRepoTrees(ctx context.Context, owner, repo, sha, page, recursive string) (*RepositoryTree, bool, error) {
+func (s *RepositoryService) GetRepoTrees(ctx context.Context, owner, repo, sha, page, recursive, filePath string) (*RepositoryTree, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/git/trees/%s", owner, repo, sha)
-	req, err := newRequest(s.api, http.MethodGet, urlStr,
-		&url.Values{"page": []string{page}, "per_page": []string{"100"}, "recursive": []string{recursive}}, RequestHandler{t: Query})
+	query := pagedLimitQuery(page)
+	query = buildQuery(query, "recursive", recursive)
+	query = buildQuery(query, "file_path", filePath)
+	req, err := newRequest(s.api, http.MethodGet, urlStr, query, RequestHandler{t: Query})
 	if err != nil {
 		return nil, false, err
 	}
@@ -186,14 +229,9 @@ func (s *RepositoryService) GetRepoFileList(ctx context.Context, owner, repo, re
 // UpdateRepoPullRequestSetting 更新 Pull Request设置
 //
 // api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-pull-request-settings
-func (s *RepositoryService) UpdateRepoPullRequestSetting(ctx context.Context, owner, repo string) (bool, error) {
+func (s *RepositoryService) UpdateRepoPullRequestSetting(ctx context.Context, owner, repo string, prSetting *RepositoryRepoPullRequestSettingRequest) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pull_request_settings", owner, repo)
-	req, err := newRequest(s.api, http.MethodPut, urlStr, RepositoryRepoPullRequestSettingRequest{
-		DisableMergeBySelf:    true,
-		AddNotesAfterMerged:   true,
-		CanReopen:             true,
-		AllowLiteMergeRequest: true,
-	})
+	req, err := newRequest(s.api, http.MethodPut, urlStr, prSetting)
 	if err != nil {
 		return false, err
 	}
@@ -202,7 +240,7 @@ func (s *RepositoryService) UpdateRepoPullRequestSetting(ctx context.Context, ow
 	return successModified(resp), err
 }
 
-// UpdateRepoSetting 更新仓库设置
+// UpdateRepoSetting 更新仓库功能设置
 //
 // api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-repo-settings
 func (s *RepositoryService) UpdateRepoSetting(ctx context.Context, owner, repo string) (bool, error) {

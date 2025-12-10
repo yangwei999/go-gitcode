@@ -17,6 +17,7 @@ import (
 	"encoding/json"
 	"github.com/opensourceways/go-gitcode/openapi"
 	"strconv"
+	"strings"
 )
 
 type Project struct {
@@ -29,6 +30,7 @@ type Project struct {
 
 type Attributes struct {
 	ID           *json.Number       `json:"id,omitempty"`
+	Title        *string            `json:"title,omitempty"`
 	Action       *string            `json:"action,omitempty"`
 	ActionDetail *string            `json:"update_reason,omitempty"`
 	State        *string            `json:"state,omitempty"`
@@ -42,6 +44,9 @@ type Attributes struct {
 	SourceBranch *string            `json:"source_branch,omitempty"`
 	CreateTime   *openapi.Timestamp `json:"created_at,omitempty"`
 	UpdatedTime  *openapi.Timestamp `json:"updated_at,omitempty"`
+	Approves     []*openapi.User    `json:"approver_list,omitempty"`
+	Assignees    []*openapi.User    `json:"assignee_list,omitempty"`
+	Reviewers    []*openapi.User    `json:"reviewer_list,omitempty"`
 }
 
 type IssuePart struct {
@@ -100,6 +105,11 @@ func (iss *IssueEvent) GetRepo() *string {
 		return nil
 	}
 
+	if iss.Repository.Path != nil && strings.Contains(*iss.Repository.Path, "/") {
+		repo := strings.Split(*iss.Repository.Path, "/")[1]
+		return &repo
+	}
+
 	return iss.Repository.Name
 }
 func (iss *IssueEvent) GetHtmlURL() *string {
@@ -131,11 +141,20 @@ func (iss *IssueEvent) GetID() *string {
 
 	return nil
 }
+func (iss *IssueEvent) GetAuthorID() *string {
+	return nil
+}
 func (iss *IssueEvent) GetAuthor() *string {
 	if iss.User == nil {
 		return nil
 	}
 	return iss.User.UserName
+}
+func (iss *IssueEvent) GetAuthorEmail() *string {
+	if iss.User == nil {
+		return nil
+	}
+	return iss.User.Email
 }
 func (iss *IssueEvent) GetCommentID() *string {
 	return nil
@@ -188,4 +207,43 @@ func (iss *IssueEvent) GetRepoVisibility() *string {
 		return nil
 	}
 	return Visibility(iss.Repository.Visibility)
+}
+
+func (iss *IssueEvent) GetTitle() *string {
+	if iss.Attributes == nil {
+		return nil
+	}
+	return iss.Attributes.Title
+}
+
+func (iss *IssueEvent) GetIssueTypeName() *string {
+	return nil
+}
+
+func (iss *IssueEvent) GetIssueAuthor() *string {
+	if iss.User == nil {
+		return nil
+	}
+	return iss.User.UserName
+}
+
+func (iss *IssueEvent) GetIssueAssignees() []string {
+	if iss.Assignees == nil {
+		return nil
+	}
+	var assignees []string
+	for i := range iss.Assignees {
+		if iss.Assignees[i].UserName != nil {
+			assignees = append(assignees, *iss.Assignees[i].UserName)
+		}
+	}
+	return assignees
+}
+
+func (iss *IssueEvent) GetPRAuthor() *string {
+	return nil
+}
+
+func (iss *IssueEvent) GetPRAssignees() []string {
+	return nil
 }

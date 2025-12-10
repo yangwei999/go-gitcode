@@ -47,17 +47,19 @@ type Repository struct {
 	Archived           *bool         `json:"archived,omitempty"`
 
 	// Additional mutable fields when creating and editing a repository
-	Public            *bool   `json:"public,omitempty"`
-	Private           *bool   `json:"private,omitempty"`
-	HasIssues         *bool   `json:"has_issues,omitempty"`
-	HasWiki           *bool   `json:"has_wiki,omitempty"`
-	HasPages          *bool   `json:"has_pages,omitempty"`
-	HasProjects       *bool   `json:"has_projects,omitempty"`
-	HasDownloads      *bool   `json:"has_downloads,omitempty"`
-	HasDiscussions    *bool   `json:"has_discussions,omitempty"`
-	IsTemplate        *bool   `json:"is_template,omitempty"`
-	LicenseTemplate   *string `json:"license_template,omitempty"`
-	GitignoreTemplate *string `json:"gitignore_template,omitempty"`
+	Public              *bool   `json:"public,omitempty"`
+	Private             *bool   `json:"private,omitempty"`
+	HasIssues           *bool   `json:"has_issues,omitempty"`
+	HasWiki             *bool   `json:"has_wiki,omitempty"`
+	HasPages            *bool   `json:"has_pages,omitempty"`
+	HasProjects         *bool   `json:"has_projects,omitempty"`
+	HasDownloads        *bool   `json:"has_downloads,omitempty"`
+	HasDiscussions      *bool   `json:"has_discussions,omitempty"`
+	IsTemplate          *bool   `json:"is_template,omitempty"`
+	LicenseTemplate     *string `json:"license_template,omitempty"`
+	GitignoreTemplate   *string `json:"gitignore_template,omitempty"`
+	IssueTemplateSource *string `json:"issue_template_source,omitempty"`
+	License             *string `json:"license,omitempty"`
 }
 
 type RepositoryCommit struct {
@@ -68,7 +70,6 @@ type RepositoryCommit struct {
 	Commit      *Commit     `json:"commit,omitempty"`
 	Author      *CommitUser `json:"author,omitempty"`
 	Committer   *CommitUser `json:"committer,omitempty"`
-	Parents     *Commit     `json:"parents,omitempty"`
 	HTMLURL     *string     `json:"html_url,omitempty"`
 	URL         *string     `json:"url,omitempty"`
 	CommentsURL *string     `json:"comments_url,omitempty"`
@@ -152,6 +153,7 @@ type Branch struct {
 	Name      *string           `json:"name,omitempty"`
 	Commit    *RepositoryCommit `json:"commit,omitempty"`
 	Protected *bool             `json:"protected,omitempty"`
+	Default   *bool             `json:"default,omitempty"`
 }
 
 type BranchRequest struct {
@@ -222,10 +224,24 @@ type RepositoryTree struct {
 }
 
 type RepositoryRepoPullRequestSettingRequest struct {
-	DisableMergeBySelf    bool `json:"disable_merge_by_self,omitempty"`
-	AddNotesAfterMerged   bool `json:"add_notes_after_merged,omitempty"`
-	CanReopen             bool `json:"can_reopen,omitempty"`
-	AllowLiteMergeRequest bool `json:"is_allow_lite_merge_request,omitempty"`
+	DisableMergeBySelf                        *bool   `json:"disable_merge_by_self,omitempty"`
+	AddNotesAfterMerged                       *bool   `json:"add_notes_after_merged,omitempty"`
+	CanReopen                                 *bool   `json:"can_reopen,omitempty"`
+	AllowLiteMergeRequest                     *bool   `json:"is_allow_lite_merge_request,omitempty"`
+	ApprovalRequiredReviewersEnable           *bool   `json:"approval_required_reviewers_enable,omitempty"`
+	ApprovalRequiredReviewers                 *int    `json:"approval_required_reviewers,omitempty"`
+	OnlyAllowMergeIfAllDiscussionsAreResolved *bool   `json:"only_allow_merge_if_all_discussions_are_resolved,omitempty"`
+	DisableSquashMerge                        *bool   `json:"disable_squash_merge,omitempty"`
+	AutoSquashMerge                           *bool   `json:"auto_squash_merge,omitempty"`
+	MergeMethod                               *string `json:"merge_method,omitempty"`
+	SquashMergeWithNoMergeCommit              *bool   `json:"squash_merge_with_no_merge_commit,omitempty"`
+	MergedCommitAuthor                        *string `json:"merged_commit_author,omitempty"`
+	ApprovalApproverIds                       *string `json:"approval_approver_ids,omitempty"`
+	ApprovalRequiredApprovers                 *int    `json:"approval_required_approvers,omitempty"`
+	ApprovalTesterIds                         *string `json:"approval_tester_ids,omitempty"`
+	ApprovalRequiredTesters                   *int    `json:"approval_required_testers,omitempty"`
+	LiteMergeRequestPrefixTitle               *string `json:"lite_merge_request_prefix_title,omitempty"`
+	CloseIssueWhenMrMerged                    *bool   `json:"close_issue_when_mr_merged,omitempty"`
 }
 
 type RepositoryRepoSettingRequest struct {
@@ -233,4 +249,41 @@ type RepositoryRepoSettingRequest struct {
 	ForbiddenCommitterCreateBranch bool `json:"forbidden_committer_create_branch,omitempty"`
 	ForbiddenDeveloperCreateBranch bool `json:"forbidden_developer_create_branch,omitempty"`
 	ForbiddenDeveloperCreateTag    bool `json:"forbidden_developer_create_tag,omitempty"`
+}
+
+type RepositoryTag struct {
+	Name       *string `json:"name,omitempty"`
+	Message    *string `json:"message,omitempty"`
+	Commit     *Commit `json:"commit,omitempty"`
+	ZipballURL *string `json:"zipball_url,omitempty"`
+	TarballURL *string `json:"tarball_url,omitempty"`
+}
+
+// FileRequest 文件操作请求参数
+type FileRequest struct {
+	Content     *string `json:"content"`
+	Message     *string `json:"message"`
+	Branch      *string `json:"branch,omitempty"`
+	Sha         *string `json:"sha,omitempty"`
+	AuthorName  *string `json:"author[name],omitempty"`
+	AuthorEmail *string `json:"author[email],omitempty"`
+}
+
+// FileCommitResponse 文件操作响应
+type FileCommitResponse struct {
+	Content *RepositoryContent `json:"content,omitempty"`
+	Commit  *RepositoryCommit  `json:"commit,omitempty"`
+}
+
+type MileStonesResponse struct {
+	Number       *int       `json:"number,omitempty"`
+	Description  *string    `json:"description,omitempty"`
+	RepositoryId *int       `json:"repository_id,omitempty"`
+	OpenIssues   *int       `json:"open_issues,omitempty"`
+	ClosedIssues *int       `json:"closed_issues,omitempty"`
+	State        *string    `json:"state,omitempty"`
+	Title        *string    `json:"title,omitempty"`
+	Url          *string    `json:"url,omitempty"`
+	CreatedAt    *Timestamp `json:"created_at,omitempty"`
+	UpdatedAt    *Timestamp `json:"updated_at,omitempty"`
 }

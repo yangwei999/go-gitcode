@@ -13,7 +13,10 @@
 // limitations under the License.
 package webhook
 
-import "github.com/opensourceways/go-gitcode/openapi"
+import (
+	"github.com/opensourceways/go-gitcode/openapi"
+	"strings"
+)
 
 type PushEvent struct {
 	UUID         *string            `json:"uuid,omitempty"`
@@ -48,6 +51,11 @@ func (p *PushEvent) GetRepo() *string {
 		return nil
 	}
 
+	if p.Repository.Path != nil && strings.Contains(*p.Repository.Path, "/") {
+		repo := strings.Split(*p.Repository.Path, "/")[1]
+		return &repo
+	}
+
 	return p.Repository.Name
 }
 func (p *PushEvent) GetHtmlURL() *string {
@@ -69,8 +77,14 @@ func (p *PushEvent) GetNumber() *string {
 func (p *PushEvent) GetID() *string {
 	return nil
 }
+func (p *PushEvent) GetAuthorID() *string {
+	return nil
+}
 func (p *PushEvent) GetAuthor() *string {
 	return p.Author
+}
+func (p *PushEvent) GetAuthorEmail() *string {
+	return nil
 }
 func (p *PushEvent) GetCommentID() *string {
 	return nil
@@ -97,4 +111,28 @@ func (p *PushEvent) GetRepoVisibility() *string {
 		return nil
 	}
 	return Visibility(p.Repository.Visibility)
+}
+
+func (p *PushEvent) GetTitle() *string {
+	return nil
+}
+
+func (p *PushEvent) GetIssueTypeName() *string {
+	return nil
+}
+
+func (p *PushEvent) GetIssueAuthor() *string {
+	return nil
+}
+
+func (p *PushEvent) GetIssueAssignees() []string {
+	return nil
+}
+
+func (p *PushEvent) GetPRAuthor() *string {
+	return nil
+}
+
+func (p *PushEvent) GetPRAssignees() []string {
+	return nil
 }

@@ -16,6 +16,7 @@ package webhook
 import (
 	"github.com/opensourceways/go-gitcode/openapi"
 	"strconv"
+	"strings"
 )
 
 type NoteEvent struct {
@@ -68,6 +69,10 @@ func (n *NoteEvent) GetRepo() *string {
 		return nil
 	}
 
+	if n.Repository.Path != nil && strings.Contains(*n.Repository.Path, "/") {
+		repo := strings.Split(*n.Repository.Path, "/")[1]
+		return &repo
+	}
 	return n.Repository.Name
 }
 func (n *NoteEvent) GetHtmlURL() *string {
@@ -121,6 +126,9 @@ func (n *NoteEvent) GetNumber() *string {
 
 	return nil
 }
+func (n *NoteEvent) GetAuthorID() *string {
+	return nil
+}
 func (n *NoteEvent) GetAuthor() *string {
 	if n.Issue != nil && n.Issue.Author != nil {
 		return n.Issue.Author.UserName
@@ -131,6 +139,12 @@ func (n *NoteEvent) GetAuthor() *string {
 	}
 
 	return nil
+}
+func (n *NoteEvent) GetAuthorEmail() *string {
+	if n.User == nil {
+		return nil
+	}
+	return n.User.Email
 }
 func (n *NoteEvent) GetCommentID() *string {
 	if n.Attributes == nil || n.Attributes.CommentID == nil {
@@ -178,4 +192,46 @@ func (n *NoteEvent) GetRepoVisibility() *string {
 		return nil
 	}
 	return Visibility(n.Repository.Visibility)
+}
+
+func (n *NoteEvent) GetTitle() *string {
+	if n.Attributes == nil {
+		return nil
+	}
+	return n.Attributes.Title
+}
+
+func (n *NoteEvent) GetIssueTypeName() *string {
+	return nil
+}
+
+func (n *NoteEvent) GetIssueAuthor() *string {
+	if n.Issue == nil || n.Issue.Author == nil {
+		return nil
+	}
+	return n.Issue.Author.UserName
+}
+
+func (n *NoteEvent) GetIssueAssignees() []string {
+	return nil
+}
+
+func (n *NoteEvent) GetPRAuthor() *string {
+	if n.PR == nil || n.PR.Author == nil {
+		return nil
+	}
+	return n.PR.Author.UserName
+}
+
+func (n *NoteEvent) GetPRAssignees() []string {
+	if n.PR == nil || n.PR.Approves == nil {
+		return nil
+	}
+	var assignees []string
+	for i := range n.PR.Approves {
+		if n.PR.Approves[i].UserName != nil {
+			assignees = append(assignees, *n.PR.Approves[i].UserName)
+		}
+	}
+	return assignees
 }

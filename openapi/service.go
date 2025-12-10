@@ -122,3 +122,5 @@ type RepositoryService service
 type UserService service
 
 type OrganizationService service
+
+type DashboardService service

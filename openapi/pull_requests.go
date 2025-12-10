@@ -20,6 +20,21 @@ import (
 	"net/url"
 )
 
+// CreatePullRequest 创建Pull Request
+//
+// api Docs: https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-pulls
+func (s *PullRequestsService) CreatePullRequest(ctx context.Context, owner, repo string, prContent *PullRequestRequest) (*PullRequest, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/pulls", owner, repo)
+	req, err := newRequest(s.api, http.MethodPost, urlStr, prContent)
+	if err != nil {
+		return nil, false, err
+	}
+
+	pr := new(PullRequest)
+	resp, err := s.api.Do(ctx, req, pr)
+	return pr, successCreated(resp), err
+}
+
 // GetPullRequest 获取单个Pull Requests
 //
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number
@@ -33,6 +48,22 @@ func (s *PullRequestsService) GetPullRequest(ctx context.Context, owner, repo, n
 	pr := new(PullRequest)
 	resp, err := s.api.Do(ctx, req, pr)
 	return pr, successGetData(resp), err
+}
+
+// ListPullRequests 获取仓库的Pull Request列表
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls
+func (s *PullRequestsService) ListPullRequests(ctx context.Context, owner, repo string, query *url.Values) ([]*PullRequest, bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/pulls", owner, repo)
+
+	req, err := newRequest(s.api, http.MethodGet, urlStr, query, RequestHandler{t: Query})
+	if err != nil {
+		return nil, false, err
+	}
+
+	var prs []*PullRequest
+	resp, err := s.api.Do(ctx, req, &prs)
+	return prs, successGetData(resp), err
 }
 
 // UpdatePullRequest 更新Pull Request信息
