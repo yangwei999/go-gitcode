@@ -34,8 +34,7 @@ func (s *PullRequestsService) UpdatePRAssignees(ctx context.Context, owner, repo
 		return false, err
 	}
 
-	pr := new(PullRequest)
-	resp, err := s.api.Do(ctx, req, pr)
+	resp, err := s.api.Do(ctx, req, nil)
 	return successModified(resp), err
 }
 
@@ -49,8 +48,7 @@ func (s *PullRequestsService) RemovePRAssignees(ctx context.Context, owner, repo
 		return false, err
 	}
 
-	pr := new(PullRequest)
-	resp, err := s.api.Do(ctx, req, pr)
+	resp, err := s.api.Do(ctx, req, nil)
 	return successModified(resp), err
 }
 
@@ -66,8 +64,7 @@ func (s *PullRequestsService) ResetPRAssigneesStatus(ctx context.Context, owner,
 		return false, err
 	}
 
-	pr := new(PullRequest)
-	resp, err := s.api.Do(ctx, req, pr)
+	resp, err := s.api.Do(ctx, req, nil)
 	return successModified(resp), err
 }
 
@@ -84,8 +81,7 @@ func (s *PullRequestsService) UpdatePRReviewers(ctx context.Context, owner, repo
 		return false, err
 	}
 
-	pr := new(PullRequest)
-	resp, err := s.api.Do(ctx, req, pr)
+	resp, err := s.api.Do(ctx, req, nil)
 	return successModified(resp), err
 }
 
@@ -101,7 +97,6 @@ func (s *PullRequestsService) RemovePRReviewers(ctx context.Context, owner, repo
 		return false, err
 	}
 
-	pr := new(PullRequest)
-	resp, err := s.api.Do(ctx, req, pr)
+	resp, err := s.api.Do(ctx, req, nil)
 	return successModified(resp), err
 }
