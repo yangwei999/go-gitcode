@@ -17,10 +17,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/opensourceways/go-gitcode/testdata"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
+
+	"github.com/opensourceways/go-gitcode/testdata"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestIssuesLabels(t *testing.T) {
@@ -65,14 +66,14 @@ func listOrCreateLabel(t *testing.T, client *APIClient, mux *http.ServeMux) {
 		http.Error(w, errMsg, http.StatusInternalServerError)
 	})
 
-	got, ok, err := client.Issues.ListRepoIssueLabels(context.Background(), owner, repo)
+	got, ok, err := client.Issues.ListRepoIssueLabels(context.Background(), owner, repo, page)
 	assert.Nil(t, err)
 	assert.True(t, ok)
 	for i := range allLabels {
 		assert.Equal(t, *allLabels[i], *got[i])
 	}
 
-	got, ok, err = client.Issues.ListRepoIssueLabels(context.Background(), owner, "333")
+	got, ok, err = client.Issues.ListRepoIssueLabels(context.Background(), owner, "333", page)
 	assert.False(t, ok)
 	assert.Nil(t, got)
 	assert.Equal(t, errMsg+"\n", err.Error())
