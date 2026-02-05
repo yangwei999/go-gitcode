@@ -17,10 +17,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/opensourceways/go-gitcode/testdata"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
+
+	"github.com/opensourceways/go-gitcode/testdata"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPullRequests(t *testing.T) {
@@ -113,7 +114,7 @@ func getAllPRCommits(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	mockResponse(t, mux, urlStr, want)
 
 	ctx := context.Background()
-	got, ok, err := client.PullRequests.ListPullRequestCommits(ctx, owner, repo, number)
+	got, ok, err := client.PullRequests.ListPullRequestCommits(ctx, owner, repo, number, page)
 	assert.Nil(t, err)
 	assert.True(t, ok)
 
@@ -169,7 +170,7 @@ func mergePR(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	mockResponse(t, mux, urlStr, want)
 
 	ctx := context.Background()
-	got, ok, err := client.PullRequests.MergePullRequest(ctx, owner, repo, number, "merge")
+	got, ok, err := client.PullRequests.MergePullRequest(ctx, owner, repo, number, nil)
 	assert.Nil(t, err)
 	assert.True(t, ok)
 	assert.Equal(t, *want, *got)

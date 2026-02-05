@@ -16,12 +16,13 @@ package openapi
 import (
 	"context"
 	"errors"
-	"github.com/agiledragon/gomonkey/v2"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"strconv"
 	"testing"
 	"time"
+
+	"github.com/agiledragon/gomonkey/v2"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewRequestError(t *testing.T) {
@@ -36,7 +37,7 @@ func TestNewRequestError(t *testing.T) {
 
 	defer patch.Reset()
 
-	targetLabels, ok, err := client.Issues.ListRepoIssueLabels(context.Background(), owner, repo)
+	targetLabels, ok, err := client.Issues.ListRepoIssueLabels(context.Background(), owner, repo, page)
 	compare(t, ok, err, mockErr, targetLabels)
 
 	repo11 := repo
@@ -57,7 +58,7 @@ func TestNewRequestError(t *testing.T) {
 	})
 	compare(t, ok, err, mockErr, issueComment)
 
-	labels, ok, err := client.Issues.ListRepoIssueLabels(context.Background(), owner, repo)
+	labels, ok, err := client.Issues.ListRepoIssueLabels(context.Background(), owner, repo, page)
 	compare(t, ok, err, mockErr, labels)
 
 	mockLabelName := "test label"
@@ -119,7 +120,7 @@ func TestNewRequestError(t *testing.T) {
 	result13, ok, err := client.User.GetUserInfo(context.Background())
 	compare(t, ok, err, mockErr, result13)
 
-	result14, ok, err := client.PullRequests.ListPullRequestCommits(context.Background(), owner, repo, number)
+	result14, ok, err := client.PullRequests.ListPullRequestCommits(context.Background(), owner, repo, number, page)
 	compare(t, ok, err, mockErr, result14)
 
 	result15, ok, err := client.Issues.GetIssueLabels(context.Background(), owner, "15423", page)
@@ -131,7 +132,7 @@ func TestNewRequestError(t *testing.T) {
 	result17, ok, err := client.PullRequests.ListPullRequestOperationLogs(context.Background(), owner, repo, number, "asc", page)
 	compare(t, ok, err, mockErr, result17)
 
-	result18, ok, err := client.PullRequests.MergePullRequest(context.Background(), owner, repo, number, "merge")
+	result18, ok, err := client.PullRequests.MergePullRequest(context.Background(), owner, repo, number, nil)
 	compare(t, ok, err, mockErr, result18)
 
 	result19, ok, err := client.PullRequests.ListPullRequestComments(context.Background(), owner, repo, number, page, "pr_comment", "")
