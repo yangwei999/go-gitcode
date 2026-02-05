@@ -15,12 +15,14 @@ package webhook
 
 import (
 	"encoding/json"
-	"github.com/opensourceways/go-gitcode/openapi"
 	"strconv"
 	"strings"
+
+	"github.com/opensourceways/go-gitcode/openapi"
 )
 
 type PRPart struct {
+	Title        *string         `json:"title,omitempty"`
 	Action       *string         `json:"action,omitempty"`
 	State        *string         `json:"state,omitempty"`
 	Number       *int            `json:"iid,omitempty"`
@@ -178,10 +180,10 @@ func (pr *PullRequestEvent) GetRepoVisibility() *string {
 }
 
 func (pr *PullRequestEvent) GetTitle() *string {
-	if pr.Attributes == nil {
-		return nil
+	if pr.PR != nil {
+		return pr.PR.Title
 	}
-	return pr.Attributes.Title
+	return nil
 }
 
 func (pr *PullRequestEvent) GetIssueTypeName() *string {
@@ -197,10 +199,13 @@ func (pr *PullRequestEvent) GetIssueAssignees() []string {
 }
 
 func (pr *PullRequestEvent) GetPRAuthor() *string {
-	if pr.User == nil {
-		return nil
+	if pr.Attributes != nil || pr.Attributes.Author != nil {
+		return pr.Attributes.Author.UserName
 	}
-	return pr.User.UserName
+	if pr.PR != nil || pr.PR.Author != nil {
+		return pr.PR.Author.UserName
+	}
+	return nil
 }
 
 func (pr *PullRequestEvent) GetPRAssignees() []string {

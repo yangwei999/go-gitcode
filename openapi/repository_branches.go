@@ -68,6 +68,22 @@ func (s *RepositoryService) CreateRepoBranch(ctx context.Context, owner, repo, b
 	return successModified(resp), err
 }
 
+// GetRepoBranchProtectedRule 获取保护分支规则列表
+//
+// api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-protect-branches
+func (s *RepositoryService) GetRepoBranchProtectedRule(ctx context.Context, owner, repo, page string) ([]*BranchProtectedRule, bool, error) {
+	query := &url.Values{"page": []string{page}, "per_page": []string{"100"}}
+	urlStr := fmt.Sprintf("repos/%s/%s/protect_branches", owner, repo)
+	req, err := newRequest(s.api, http.MethodGet, urlStr, query, RequestHandler{t: Query})
+	if err != nil {
+		return nil, false, err
+	}
+
+	var branchRules []*BranchProtectedRule
+	resp, err := s.api.Do(ctx, req, &branchRules)
+	return branchRules, successGetData(resp), err
+}
+
 // CreateRepoBranchProtectedRule 新建保护分支规则
 //
 // api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-branches-setting-new

@@ -14,9 +14,10 @@
 package webhook
 
 import (
-	"github.com/opensourceways/go-gitcode/openapi"
 	"strconv"
 	"strings"
+
+	"github.com/opensourceways/go-gitcode/openapi"
 )
 
 type NoteEvent struct {
@@ -195,10 +196,13 @@ func (n *NoteEvent) GetRepoVisibility() *string {
 }
 
 func (n *NoteEvent) GetTitle() *string {
-	if n.Attributes == nil {
-		return nil
+	if n.Issue != nil {
+		return n.Issue.Title
 	}
-	return n.Attributes.Title
+	if n.PR != nil {
+		return n.PR.Title
+	}
+	return nil
 }
 
 func (n *NoteEvent) GetIssueTypeName() *string {

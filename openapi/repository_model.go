@@ -161,6 +161,14 @@ type BranchRequest struct {
 	BranchName string `json:"branch_name,omitempty"`
 }
 
+type BranchProtectedRule struct {
+	Name          string `json:"name,omitempty"`
+	OwnerCanPush  bool   `json:"owner_can_push,omitempty"`
+	OwnerCanMerge bool   `json:"owner_can_merge,omitempty"`
+	NoOneCanPush  bool   `json:"no_one_can_push,omitempty"`
+	NoOneCanMerge bool   `json:"no_one_can_merge,omitempty"`
+}
+
 type BranchProtectedRuleRequest struct {
 	PushPermission  string `json:"pusher,omitempty"`
 	MergePermission string `json:"merger,omitempty"`
@@ -168,19 +176,22 @@ type BranchProtectedRuleRequest struct {
 }
 
 type RepositoryRequest struct {
-	Name              *string `json:"name,omitempty"`
-	Description       *string `json:"description,omitempty"`
-	Homepage          *string `json:"homepage,omitempty"`
-	HasIssues         *bool   `json:"has_issues,omitempty"`
-	HasWiki           *bool   `json:"has_wiki,omitempty"`
-	AutoInit          *bool   `json:"auto_init,omitempty"`
-	Private           *bool   `json:"private,omitempty"`
-	Public            *int    `json:"public,omitempty"`
-	DefaultBranch     *string `json:"default_branch,omitempty"`
-	LicenseTemplate   *string `json:"license_template,omitempty"`
-	GitignoreTemplate *string `json:"gitignore_template,omitempty"`
-	Path              *string `json:"path,omitempty"`
-	ImportUrl         *string `json:"import_url,omitempty"`
+	Name              *string  `json:"name,omitempty"`
+	Description       *string  `json:"description,omitempty"`
+	Homepage          *string  `json:"homepage,omitempty"`
+	HasIssues         *bool    `json:"has_issues,omitempty"`
+	HasWiki           *bool    `json:"has_wiki,omitempty"`
+	AutoInit          *bool    `json:"auto_init,omitempty"`
+	Private           *bool    `json:"private,omitempty"`
+	Public            *int     `json:"public,omitempty"`
+	DefaultBranch     *string  `json:"default_branch,omitempty"`
+	LicenseTemplate   *string  `json:"license_template,omitempty"`
+	GitignoreTemplate *string  `json:"gitignore_template,omitempty"`
+	Path              *string  `json:"path,omitempty"`
+	ImportUrl         *string  `json:"import_url,omitempty"`
+	EnablePlatformLFS *bool    `json:"lfs_enabled,omitempty"`
+	Topics            []string `json:"tags,omitempty"`
+	MaxFileSize       *int     `json:"max_file_size,omitempty"`
 }
 
 type RepositoryPermissionMode struct {
@@ -223,7 +234,7 @@ type RepositoryTree struct {
 	Tree []*RepositoryContent `json:"tree,omitempty"`
 }
 
-type RepositoryRepoPullRequestSettingRequest struct {
+type PullRequestSettingRequest struct {
 	DisableMergeBySelf                        *bool   `json:"disable_merge_by_self,omitempty"`
 	AddNotesAfterMerged                       *bool   `json:"add_notes_after_merged,omitempty"`
 	CanReopen                                 *bool   `json:"can_reopen,omitempty"`
@@ -249,6 +260,7 @@ type RepositoryRepoSettingRequest struct {
 	ForbiddenCommitterCreateBranch bool `json:"forbidden_committer_create_branch,omitempty"`
 	ForbiddenDeveloperCreateBranch bool `json:"forbidden_developer_create_branch,omitempty"`
 	ForbiddenDeveloperCreateTag    bool `json:"forbidden_developer_create_tag,omitempty"`
+	IncludeLFSObjects              bool `json:"include_lfs_objects,omitempty"`
 }
 
 type RepositoryTag struct {

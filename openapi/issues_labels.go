@@ -23,9 +23,10 @@ import (
 // ListRepoIssueLabels 获取仓库所有任务标签
 //
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-labels
-func (s *IssuesService) ListRepoIssueLabels(ctx context.Context, owner, repo string) ([]*Label, bool, error) {
+func (s *IssuesService) ListRepoIssueLabels(ctx context.Context, owner, repo, page string) ([]*Label, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/labels", owner, repo)
-	req, err := newRequest(s.api, http.MethodGet, urlStr, nil)
+	query := &url.Values{"page": []string{page}, "per_page": []string{"100"}}
+	req, err := newRequest(s.api, http.MethodGet, urlStr, query, RequestHandler{t: Query})
 	if err != nil {
 		return nil, false, err
 	}

@@ -100,9 +100,10 @@ func (s *PullRequestsService) ListPullRequestLinkingIssues(ctx context.Context, 
 // ListPullRequestCommits 获取某Pull Request的所有Commit信息
 //
 // api Docs: https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-commits
-func (s *PullRequestsService) ListPullRequestCommits(ctx context.Context, owner, repo, number string) ([]*RepositoryCommit, bool, error) {
+func (s *PullRequestsService) ListPullRequestCommits(ctx context.Context, owner, repo, number, page string) ([]*RepositoryCommit, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/commits", owner, repo, number)
-	req, err := newRequest(s.api, http.MethodGet, urlStr, nil)
+	query := &url.Values{"page": []string{page}, "per_page": []string{"100"}}
+	req, err := newRequest(s.api, http.MethodGet, urlStr, query, RequestHandler{t: Query})
 	if err != nil {
 		return nil, false, err
 	}
@@ -130,11 +131,9 @@ func (s *PullRequestsService) GetPullRequestChangeFiles(ctx context.Context, own
 // MergePullRequest 合并Pull Request
 //
 // api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-pulls-number-merge
-func (s *PullRequestsService) MergePullRequest(ctx context.Context, owner, repo, number, mergeMethod string) (*PullRequestMergedResult, bool, error) {
+func (s *PullRequestsService) MergePullRequest(ctx context.Context, owner, repo, number string, mergeParam *PullRequestRequestMerge) (*PullRequestMergedResult, bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/merge", owner, repo, number)
-	req, err := newRequest(s.api, http.MethodPut, urlStr, &PullRequestRequestMerge{
-		Method: mergeMethod,
-	})
+	req, err := newRequest(s.api, http.MethodPut, urlStr, mergeParam)
 	if err != nil {
 		return nil, false, err
 	}
@@ -158,4 +157,19 @@ func (s *PullRequestsService) ListPullRequestOperationLogs(ctx context.Context, 
 	var logs []*PullRequestOperationLog
 	resp, err := s.api.Do(ctx, req, &logs)
 	return logs, successGetData(resp), err
+}
+
+// GetPullRequestMergeStatus 判断Pull Request是否合并
+//
+// api Docs: https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-merge
+func (s *PullRequestsService) GetPullRequestMergeStatus(ctx context.Context, owner, repo, number string) (bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/merge", owner, repo, number)
+	req, err := newRequest(s.api, http.MethodGet, urlStr, nil)
+	if err != nil {
+		return false, err
+	}
+
+	pr := new(PullRequest)
+	resp, err := s.api.Do(ctx, req, pr)
+	return successGetData(resp), err
 }

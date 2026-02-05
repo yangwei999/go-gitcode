@@ -15,9 +15,10 @@ package webhook
 
 import (
 	"encoding/json"
-	"github.com/opensourceways/go-gitcode/openapi"
 	"strconv"
 	"strings"
+
+	"github.com/opensourceways/go-gitcode/openapi"
 )
 
 type Project struct {
@@ -47,9 +48,11 @@ type Attributes struct {
 	Approves     []*openapi.User    `json:"approver_list,omitempty"`
 	Assignees    []*openapi.User    `json:"assignee_list,omitempty"`
 	Reviewers    []*openapi.User    `json:"reviewer_list,omitempty"`
+	Author       *openapi.User      `json:"author,omitempty"`
 }
 
 type IssuePart struct {
+	Title          *string       `json:"title,omitempty"`
 	Action         *string       `json:"action,omitempty"`
 	State          *string       `json:"state,omitempty"`
 	Number         *int          `json:"iid,omitempty"`
@@ -221,10 +224,13 @@ func (iss *IssueEvent) GetIssueTypeName() *string {
 }
 
 func (iss *IssueEvent) GetIssueAuthor() *string {
-	if iss.User == nil {
-		return nil
+	if iss.Attributes != nil || iss.Attributes.Author != nil {
+		return iss.Attributes.Author.UserName
 	}
-	return iss.User.UserName
+	if iss.Issue != nil || iss.Issue.Author != nil {
+		return iss.Issue.Author.UserName
+	}
+	return nil
 }
 
 func (iss *IssueEvent) GetIssueAssignees() []string {

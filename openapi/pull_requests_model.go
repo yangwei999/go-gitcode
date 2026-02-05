@@ -109,7 +109,9 @@ type PullRequestRequest struct {
 }
 
 type PullRequestRequestMerge struct {
-	Method string `json:"merge_method,omitempty"`
+	Method      *string `json:"merge_method,omitempty"`
+	Title       *string `json:"title,omitempty"`
+	Description *string `json:"description,omitempty"`
 }
 
 type SimpleComment struct {
@@ -154,4 +156,8 @@ type PullRequestMergedResult struct {
 
 type PullRequestAssigneesRequest struct {
 	ResetAll *bool `json:"reset_all,omitempty"`
+}
+
+type PullRequestMergeRequest struct {
+	MergeMethod *string `json:"merge_method,omitempty"`
 }
