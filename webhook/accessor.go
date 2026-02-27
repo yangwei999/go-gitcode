@@ -53,7 +53,7 @@ func (a *GitCodeAccessor) GetAccessor(r *http.Request) (any, *string, *string) {
 	case confidentialIssueEvent:
 		a.Issues = new(IssueEvent)
 		_ = json.Unmarshal(a.Payload.Bytes(), a.Issues)
-		eventType = confidentialIssueEvent
+		eventType = issueEvent
 		return a.Issues, &eventType, &eventGUID
 	case pullRequestEvent:
 		a.PR = new(PullRequestEvent)
