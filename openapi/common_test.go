@@ -214,11 +214,10 @@ func TestNewRequestError(t *testing.T) {
 	ok, err = client.Repository.CreateRepoBranch(context.Background(), owner, repo, branch, branch1)
 	compare(t, ok, err, mockErr, nil)
 
-	permission = "none"
-	ok, err = client.Repository.CreateRepoBranchProtectedRule(context.Background(), owner, repo, branch, permission)
+	ok, err = client.Repository.CreateRepoBranchProtectedRule(context.Background(), owner, repo, branch, pusher, merger)
 	compare(t, ok, err, mockErr, nil)
 
-	ok, err = client.Repository.UpdateRepoBranchProtectedRule(context.Background(), owner, repo, branch, permission)
+	ok, err = client.Repository.UpdateRepoBranchProtectedRule(context.Background(), owner, repo, branch, pusher, merger)
 	compare(t, ok, err, mockErr, nil)
 
 	ok, err = client.Repository.RemoveRepoBranchProtectedRule(context.Background(), owner, repo, branch)

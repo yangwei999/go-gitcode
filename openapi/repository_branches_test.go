@@ -16,10 +16,11 @@ package openapi
 import (
 	"context"
 	"fmt"
-	"github.com/opensourceways/go-gitcode/testdata"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
+
+	"github.com/opensourceways/go-gitcode/testdata"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRepositoryBranches(t *testing.T) {
@@ -77,7 +78,7 @@ func createProtectedBranch(t *testing.T, client *APIClient, mux *http.ServeMux) 
 	mockResponse(t, mux, urlStr, nil)
 
 	ctx := context.Background()
-	ok, err := client.Repository.CreateRepoBranchProtectedRule(ctx, owner, repo, branch, permission)
+	ok, err := client.Repository.CreateRepoBranchProtectedRule(ctx, owner, repo, branch, pusher, merger)
 	assert.Nil(t, err)
 	assert.True(t, ok)
 }
@@ -88,7 +89,7 @@ func addOrRemoveProtectedBranch(t *testing.T, client *APIClient, mux *http.Serve
 	mockResponse(t, mux, urlStr, nil)
 
 	ctx := context.Background()
-	ok, err := client.Repository.UpdateRepoBranchProtectedRule(ctx, owner, repo, branch, "none")
+	ok, err := client.Repository.UpdateRepoBranchProtectedRule(ctx, owner, repo, branch, pusher, merger)
 	assert.Nil(t, err)
 	assert.True(t, ok)
 
