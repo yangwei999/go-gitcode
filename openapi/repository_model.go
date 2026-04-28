@@ -153,7 +153,7 @@ type Branch struct {
 	Name      *string           `json:"name,omitempty"`
 	Commit    *RepositoryCommit `json:"commit,omitempty"`
 	Protected *bool             `json:"protected,omitempty"`
-	Default   *bool             `json:"default,omitempty"`
+	Default   *bool             `json:"default_branch,omitempty"`
 }
 
 type BranchRequest struct {
