@@ -30,6 +30,7 @@ func TestPullRequestsComments(t *testing.T) {
 	getPRComments(t, client, mux)
 	updatePRComment(t, client, mux)
 	deletePRComment(t, client, mux)
+	resolveDiscussion(t, client, mux)
 }
 
 func createPRComments(t *testing.T, client *APIClient, mux *http.ServeMux) {
@@ -90,6 +91,17 @@ func deletePRComment(t *testing.T, client *APIClient, mux *http.ServeMux) {
 
 	ctx := context.Background()
 	ok, err := client.PullRequests.DeletePullRequestComment(ctx, owner, repo, commentID)
+	assert.Nil(t, err)
+	assert.True(t, ok)
+}
+
+func resolveDiscussion(t *testing.T, client *APIClient, mux *http.ServeMux) {
+	discussionID := "12345"
+	urlStr := fmt.Sprintf("/repos/%s/%s/pulls/%s/comments/%s", owner, repo, number, discussionID)
+	mockResponse(t, mux, urlStr, nil)
+
+	ctx := context.Background()
+	ok, err := client.PullRequests.ResolveDiscussion(ctx, owner, repo, number, discussionID, true)
 	assert.Nil(t, err)
 	assert.True(t, ok)
 }

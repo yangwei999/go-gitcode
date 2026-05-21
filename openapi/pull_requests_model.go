@@ -162,3 +162,7 @@ type PullRequestAssigneesRequest struct {
 type PullRequestMergeRequest struct {
 	MergeMethod *string `json:"merge_method,omitempty"`
 }
+
+type PullRequestCommentResolveRequest struct {
+	Resolved bool `json:"resolved"`
+}
