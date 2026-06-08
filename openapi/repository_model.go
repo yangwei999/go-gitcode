@@ -63,16 +63,26 @@ type Repository struct {
 }
 
 type RepositoryCommit struct {
-	ID          *string     `json:"id,omitempty"`
-	Title       *string     `json:"title,omitempty"`
-	Message     *string     `json:"message,omitempty"`
-	SHA         *string     `json:"sha,omitempty"`
-	Commit      *Commit     `json:"commit,omitempty"`
-	Author      *CommitUser `json:"author,omitempty"`
-	Committer   *CommitUser `json:"committer,omitempty"`
-	HTMLURL     *string     `json:"html_url,omitempty"`
-	URL         *string     `json:"url,omitempty"`
-	CommentsURL *string     `json:"comments_url,omitempty"`
+	ID          *string      `json:"id,omitempty"`
+	Title       *string      `json:"title,omitempty"`
+	Message     *string      `json:"message,omitempty"`
+	SHA         *string      `json:"sha,omitempty"`
+	Commit      *Commit      `json:"commit,omitempty"`
+	Author      *CommitUser  `json:"author,omitempty"`
+	Committer   *CommitUser  `json:"committer,omitempty"`
+	HTMLURL     *string      `json:"html_url,omitempty"`
+	URL         *string      `json:"url,omitempty"`
+	CommentsURL *string      `json:"comments_url,omitempty"`
+	CoAuthors   []*CoAuthor  `json:"co_authors,omitempty"`
+}
+
+type CoAuthor struct {
+	ID        *string `json:"id,omitempty"`
+	Login     *string `json:"login,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	AvatarURL *string `json:"avatar_url,omitempty"`
+	HTMLURL   *string `json:"html_url,omitempty"`
+	Email     *string `json:"email,omitempty"`
 }
 
 type Commit struct {

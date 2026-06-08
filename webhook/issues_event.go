@@ -35,6 +35,8 @@ type Attributes struct {
 	Action       *string            `json:"action,omitempty"`
 	ActionDetail *string            `json:"update_reason,omitempty"`
 	State        *string            `json:"state,omitempty"`
+	Stage        *string            `json:"stage,omitempty"`
+	Category     *string            `json:"category,omitempty"`
 	Number       *int               `json:"iid,omitempty"`
 	CommentID    *string            `json:"discussion_id,omitempty"`
 	Comment      *string            `json:"description,omitempty"`
@@ -220,7 +222,10 @@ func (iss *IssueEvent) GetTitle() *string {
 }
 
 func (iss *IssueEvent) GetIssueTypeName() *string {
-	return nil
+	if iss.Attributes == nil {
+		return nil
+	}
+	return iss.Attributes.Category
 }
 
 func (iss *IssueEvent) GetIssueAuthor() *string {

@@ -29,6 +29,7 @@ func TestIssueComments(t *testing.T) {
 
 	createIssueComment(t, client, mux)
 	listAnIssueAllComments(t, client, mux)
+	deleteIssueComment(t, client, mux)
 }
 
 func createIssueComment(t *testing.T, client *APIClient, mux *http.ServeMux) {
@@ -46,8 +47,18 @@ func createIssueComment(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	assert.Equal(t, want, *got)
 }
 
-func listAnIssueAllComments(t *testing.T, client *APIClient, mux *http.ServeMux) {
-	want := new([]*IssueComment)
+func deleteIssueComment(t *testing.T, client *APIClient, mux *http.ServeMux) {
+	commentID := "99001"
+	urlStr := fmt.Sprintf("/repos/%s/%s/issues/comments/%s", owner, repo, commentID)
+	mockResponse(t, mux, urlStr, nil)
+
+	ctx := context.Background()
+	ok, err := client.Issues.DeleteIssueComment(ctx, owner, repo, commentID)
+	assert.Nil(t, err)
+	assert.True(t, ok)
+}
+
+func listAnIssueAllComments(t *testing.T, client *APIClient, mux *http.ServeMux) {	want := new([]*IssueComment)
 	_ = testdata.ReadTestData(t, testdata.IssuesListComments, want)
 	issueNumber := "8"
 	urlStr := fmt.Sprintf("/repos/%s/%s/issues/%s/comments", owner, repo, issueNumber)

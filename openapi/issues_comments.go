@@ -56,3 +56,17 @@ func (s *IssuesService) ListIssueComments(ctx context.Context, owner, repo, numb
 	resp, err := s.api.Do(ctx, req, &comments)
 	return comments, successGetData(resp), err
 }
+
+// DeleteIssueComment 删除Issue某条评论
+//
+// api Docs: https://docs.gitcode.com/docs/apis/delete-api-v-5-repos-owner-repo-issues-comments-id
+func (s *IssuesService) DeleteIssueComment(ctx context.Context, owner, repo, commentID string) (bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/issues/comments/%s", owner, repo, commentID)
+	req, err := newRequest(s.api, http.MethodDelete, urlStr, nil)
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := s.api.Do(ctx, req, nil)
+	return successModified(resp), err
+}

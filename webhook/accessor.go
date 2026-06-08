@@ -28,10 +28,12 @@ type GitCodeAccessor struct {
 }
 
 const (
-	pushEvent        = "Push Hook"
-	issueEvent       = "Issue Hook"
-	pullRequestEvent = "Merge Request Hook"
-	noteEvent        = "Note Hook"
+	pushEvent              = "Push Hook"
+	issueEvent             = "Issue Hook"
+	confidentialIssueEvent = "Confidential Issue Hook"
+	pullRequestEvent       = "Merge Request Hook"
+	noteEvent              = "Note Hook"
+	confidentialNoteEvent  = "Confidential Note Hook"
 )
 
 func (a *GitCodeAccessor) GetAccessor(r *http.Request) (any, *string, *string) {
@@ -48,6 +50,11 @@ func (a *GitCodeAccessor) GetAccessor(r *http.Request) (any, *string, *string) {
 		a.Issues = new(IssueEvent)
 		_ = json.Unmarshal(a.Payload.Bytes(), a.Issues)
 		return a.Issues, &eventType, &eventGUID
+	case confidentialIssueEvent:
+		a.Issues = new(IssueEvent)
+		_ = json.Unmarshal(a.Payload.Bytes(), a.Issues)
+		eventType = issueEvent
+		return a.Issues, &eventType, &eventGUID
 	case pullRequestEvent:
 		a.PR = new(PullRequestEvent)
 		_ = json.Unmarshal(a.Payload.Bytes(), a.PR)
@@ -55,6 +62,11 @@ func (a *GitCodeAccessor) GetAccessor(r *http.Request) (any, *string, *string) {
 	case noteEvent:
 		a.Note = new(NoteEvent)
 		_ = json.Unmarshal(a.Payload.Bytes(), a.Note)
+		return a.Note, &eventType, &eventGUID
+	case confidentialNoteEvent:
+		a.Note = new(NoteEvent)
+		_ = json.Unmarshal(a.Payload.Bytes(), a.Note)
+		eventType = noteEvent
 		return a.Note, &eventType, &eventGUID
 	case pushEvent:
 		a.Push = new(PushEvent)

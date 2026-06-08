@@ -86,3 +86,19 @@ func (s *PullRequestsService) DeletePullRequestComment(ctx context.Context, owne
 	resp, err := s.api.Do(ctx, req, nil)
 	return successModified(resp), err
 }
+
+// ResolveDiscussion 修改PR检视意见解决状态
+//
+// api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-pulls-number-comments-discussion-id
+func (s *PullRequestsService) ResolveDiscussion(ctx context.Context, owner, repo, number, discussionID string, resolved bool) (bool, error) {
+	urlStr := fmt.Sprintf("repos/%s/%s/pulls/%s/comments/%s", owner, repo, number, discussionID)
+	req, err := newRequest(s.api, http.MethodPut, urlStr, &PullRequestCommentResolveRequest{
+		Resolved: resolved,
+	})
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := s.api.Do(ctx, req, nil)
+	return successModified(resp), err
+}

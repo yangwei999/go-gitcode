@@ -22,12 +22,13 @@ import (
 )
 
 const (
-	owner      = "111"
-	repo       = "222"
-	number     = "1"
-	page       = "1"
-	branch     = "master"
-	permission = "push"
+	owner  = "111"
+	repo   = "222"
+	number = "1"
+	page   = "1"
+	branch = "master"
+	pusher = "pusher"
+	merger = "merger"
 )
 
 // setup sets up a test HTTP server along with a github.api that is

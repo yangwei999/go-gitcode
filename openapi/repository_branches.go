@@ -87,11 +87,11 @@ func (s *RepositoryService) GetRepoBranchProtectedRule(ctx context.Context, owne
 // CreateRepoBranchProtectedRule 新建保护分支规则
 //
 // api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-branches-setting-new
-func (s *RepositoryService) CreateRepoBranchProtectedRule(ctx context.Context, owner, repo, branch, permission string) (bool, error) {
+func (s *RepositoryService) CreateRepoBranchProtectedRule(ctx context.Context, owner, repo, branch, pusher, merger string) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/branches/setting/new", owner, repo)
 	req, err := newRequest(s.api, http.MethodPut, urlStr, &BranchProtectedRuleRequest{
-		PushPermission:  permission,
-		MergePermission: permission,
+		PushPermission:  pusher,
+		MergePermission: merger,
 		BranchName:      branch,
 	})
 	if err != nil {
@@ -105,11 +105,11 @@ func (s *RepositoryService) CreateRepoBranchProtectedRule(ctx context.Context, o
 // UpdateRepoBranchProtectedRule 更新保护分支规则
 //
 // api Docs: https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-branches-wildcard-setting
-func (s *RepositoryService) UpdateRepoBranchProtectedRule(ctx context.Context, owner, repo, branch, permission string) (bool, error) {
+func (s *RepositoryService) UpdateRepoBranchProtectedRule(ctx context.Context, owner, repo, branch, pusher, merger string) (bool, error) {
 	urlStr := fmt.Sprintf("repos/%s/%s/branches/%s/setting", owner, repo, branch)
 	req, err := newRequest(s.api, http.MethodPut, urlStr, &BranchProtectedRuleRequest{
-		PushPermission:  permission,
-		MergePermission: permission,
+		PushPermission:  pusher,
+		MergePermission: merger,
 	})
 	if err != nil {
 		return false, err
