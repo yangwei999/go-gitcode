@@ -34,6 +34,8 @@ func TestGetAccessor(t *testing.T) {
 	notePR(t)
 	noteIssue(t)
 	pushCode(t)
+	confidentialIssue(t)
+	confidentialNote(t)
 
 	buf := &bytes.Buffer{}
 	buf.Write([]byte("kjhygadsskhj"))
@@ -95,15 +97,7 @@ func createIssue(t *testing.T) {
 	assert.Equal(t, "2024-10-26T10:28:03+08:00", *issue.GetCreateTime())
 	assert.Equal(t, "2024-10-26T10:28:03+08:00", *issue.GetUpdateTime())
 	assert.Equal(t, "public", *issue.GetRepoVisibility())
-
-	//issue = new(IssueEvent)
-	//rt := reflect.TypeOf(issue)
-	//n := rt.NumMethod()
-	//for i := 0; i < n; i++ {
-	//	rm := rt.Method(i)
-	//	ret := rm.Func.Call([]reflect.Value{reflect.ValueOf(issue)})
-	//	assert.Equal(t, (*string)(nil), ret[0].Interface())
-	//}
+	assert.Equal(t, (*string)(nil), issue.GetIssueTypeName())
 }
 
 func pushCode(t *testing.T) {
@@ -281,4 +275,46 @@ func noteIssue(t *testing.T) {
 	//	ret := rm.Func.Call([]reflect.Value{reflect.ValueOf(note)})
 	//	assert.Equal(t, (*string)(nil), ret[0].Interface())
 	//}
+}
+
+func confidentialIssue(t *testing.T) {
+	want := GitCodeAccessor{Issues: new(IssueEvent)}
+	data := testdata.ReadTestData(t, testdata.IssuesCreate, want.Issues)
+
+	buf := &bytes.Buffer{}
+	buf.Write(data)
+	req, _ := http.NewRequest(http.MethodPost, "http://localhost:8080/3", buf)
+	req.Header.Set(HeaderEventType, confidentialIssueEvent)
+	req.Header.Set(HeaderEventGUID, "conf-issue-guid")
+
+	a := new(GitCodeAccessor)
+	getPayload(t, a, req)
+	got1, got2, got3 := a.GetAccessor(req)
+	d1, _ := json.Marshal(want.Issues)
+	d2, _ := json.Marshal(got1)
+	assert.Equal(t, d1, d2)
+
+	assert.Equal(t, issueEvent, *got2)
+	assert.Equal(t, "conf-issue-guid", *got3)
+}
+
+func confidentialNote(t *testing.T) {
+	want := GitCodeAccessor{Note: new(NoteEvent)}
+	data := testdata.ReadTestData(t, testdata.PrNote, want.Note)
+
+	buf := &bytes.Buffer{}
+	buf.Write(data)
+	req, _ := http.NewRequest(http.MethodPost, "http://localhost:8080/4", buf)
+	req.Header.Set(HeaderEventType, confidentialNoteEvent)
+	req.Header.Set(HeaderEventGUID, "conf-note-guid")
+
+	a := new(GitCodeAccessor)
+	getPayload(t, a, req)
+	got1, got2, got3 := a.GetAccessor(req)
+	d1, _ := json.Marshal(want.Note)
+	d2, _ := json.Marshal(got1)
+	assert.Equal(t, d1, d2)
+
+	assert.Equal(t, noteEvent, *got2)
+	assert.Equal(t, "conf-note-guid", *got3)
 }

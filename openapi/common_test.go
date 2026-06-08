@@ -234,6 +234,12 @@ func TestNewRequestError(t *testing.T) {
 
 	result34, ok, err := client.Issues.ListIssueComments(context.Background(), owner, repo, number, page, "desc", "")
 	compare(t, ok, err, mockErr, result34)
+
+	ok, err = client.Issues.DeleteIssueComment(context.Background(), owner, repo, "99001")
+	compare(t, ok, err, mockErr, nil)
+
+	ok, err = client.PullRequests.ResolveDiscussion(context.Background(), owner, repo, number, "12345", true)
+	compare(t, ok, err, mockErr, nil)
 }
 
 func compare(t *testing.T, ok bool, err, mock error, result any) {
