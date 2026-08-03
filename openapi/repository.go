@@ -303,3 +303,18 @@ func (s *RepositoryService) UpdateRepoCommitSetting(ctx context.Context, owner, 
 	resp, err := s.api.Do(ctx, req, nil)
 	return successModified(resp), err
 }
+
+// ForkRepo fork一个仓库
+//
+// api Docs: https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-forks
+func (s *RepositoryService) ForkRepo(ctx context.Context, owner, repo string, request *ForkRepoRequest) error {
+	urlStr := fmt.Sprintf("repos/%s/%s/forks", owner, repo)
+	req, err := newRequest(s.api, http.MethodPost, urlStr, request)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.api.Do(ctx, req, nil)
+
+	return err
+}
