@@ -63,17 +63,17 @@ type Repository struct {
 }
 
 type RepositoryCommit struct {
-	ID          *string      `json:"id,omitempty"`
-	Title       *string      `json:"title,omitempty"`
-	Message     *string      `json:"message,omitempty"`
-	SHA         *string      `json:"sha,omitempty"`
-	Commit      *Commit      `json:"commit,omitempty"`
-	Author      *CommitUser  `json:"author,omitempty"`
-	Committer   *CommitUser  `json:"committer,omitempty"`
-	HTMLURL     *string      `json:"html_url,omitempty"`
-	URL         *string      `json:"url,omitempty"`
-	CommentsURL *string      `json:"comments_url,omitempty"`
-	CoAuthors   []*CoAuthor  `json:"co_authors,omitempty"`
+	ID          *string     `json:"id,omitempty"`
+	Title       *string     `json:"title,omitempty"`
+	Message     *string     `json:"message,omitempty"`
+	SHA         *string     `json:"sha,omitempty"`
+	Commit      *Commit     `json:"commit,omitempty"`
+	Author      *CommitUser `json:"author,omitempty"`
+	Committer   *CommitUser `json:"committer,omitempty"`
+	HTMLURL     *string     `json:"html_url,omitempty"`
+	URL         *string     `json:"url,omitempty"`
+	CommentsURL *string     `json:"comments_url,omitempty"`
+	CoAuthors   []*CoAuthor `json:"co_authors,omitempty"`
 }
 
 type CoAuthor struct {
@@ -308,4 +308,10 @@ type MileStonesResponse struct {
 	Url          *string    `json:"url,omitempty"`
 	CreatedAt    *Timestamp `json:"created_at,omitempty"`
 	UpdatedAt    *Timestamp `json:"updated_at,omitempty"`
+}
+
+type ForkRepoRequest struct {
+	Organization *string `json:"organization,omitempty"`
+	Name         *string `json:"name,omitempty"`
+	Path         *string `json:"path,omitempty"`
 }
