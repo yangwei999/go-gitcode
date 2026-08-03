@@ -240,6 +240,9 @@ func TestNewRequestError(t *testing.T) {
 
 	ok, err = client.PullRequests.ResolveDiscussion(context.Background(), owner, repo, number, "12345", true)
 	compare(t, ok, err, mockErr, nil)
+
+	err = client.Repository.ForkRepo(context.Background(), owner, repo, &ForkRepoRequest{})
+	assert.Equal(t, mockErr, err)
 }
 
 func compare(t *testing.T, ok bool, err, mock error, result any) {

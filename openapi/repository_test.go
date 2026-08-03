@@ -36,6 +36,7 @@ func TestRepository(t *testing.T) {
 	getRepoFiles(t, client, mux)
 	updatePRSetting(t, client, mux)
 	updateRepoSetting(t, client, mux)
+	forkRepo(t, client, mux)
 }
 
 func getRepoContributors(t *testing.T, client *APIClient, mux *http.ServeMux) {
@@ -201,4 +202,19 @@ func updateRepoSetting(t *testing.T, client *APIClient, mux *http.ServeMux) {
 	ok, err := client.Repository.UpdateRepoSetting(context.Background(), owner, repo)
 	assert.Nil(t, err)
 	assert.True(t, ok)
+}
+
+func forkRepo(t *testing.T, client *APIClient, mux *http.ServeMux) {
+	urlStr := fmt.Sprintf("/repos/%s/%s/forks", owner, repo)
+	mockResponse(t, mux, urlStr, nil)
+
+	org := "test-org"
+	name := "test-fork-repo"
+	path := "test-fork-path"
+	err := client.Repository.ForkRepo(context.Background(), owner, repo, &ForkRepoRequest{
+		Organization: &org,
+		Name:         &name,
+		Path:         &path,
+	})
+	assert.Nil(t, err)
 }
