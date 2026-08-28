@@ -45,6 +45,7 @@ type Issue struct {
 	Body             *string           `json:"body,omitempty"`
 	User             *User             `json:"user,omitempty"`
 	Assignee         *User             `json:"assignee,omitempty"`
+	Assignees        []*User           `json:"assignees,omitempty"`
 	Repository       *Repository       `json:"repository,omitempty"`
 	Labels           []*Label          `json:"labels,omitempty"`
 	CreatedAt        *Timestamp        `json:"created_at,omitempty"`
