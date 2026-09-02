@@ -22,7 +22,6 @@ import (
 type Label struct {
 	Name  string `json:"name,omitempty"`
 	Color string `json:"color,omitempty"`
-	Title string `json:"title,omitempty"`
 }
 
 func (l *Label) Form() *url.Values {
