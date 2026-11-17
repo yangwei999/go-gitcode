@@ -1,6 +1,6 @@
 module github.com/opensourceways/go-gitcode
 
-go 1.26.6
+go 1.26.11
 
 require (
 	github.com/agiledragon/gomonkey/v2 v2.12.0
