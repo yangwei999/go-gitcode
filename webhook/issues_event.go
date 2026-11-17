@@ -63,12 +63,22 @@ type IssuePart struct {
 	AssigneeIDList []*int64      `json:"assignee_ids,omitempty"`
 }
 
+type Changes struct {
+	CustomIssueStage CustomIssueStage `json:"custom_issue_stage"`
+}
+
+type CustomIssueStage struct {
+	Previous string `json:"previous,omitempty"`
+	Current  string `json:"current,omitempty"`
+}
+
 type IssueEvent struct {
 	UUID        *string          `json:"uuid,omitempty"`
 	EventType   *string          `json:"event_type,omitempty"`
 	ObjectKind  *string          `json:"object_kind,omitempty"`
 	ManualBuild *bool            `json:"manual_build,omitempty"`
 	Attributes  *Attributes      `json:"object_attributes,omitempty"`
+	Changes     *Changes         `json:"changes,omitempty"`
 	User        *openapi.User    `json:"user,omitempty"`
 	Assignees   []*openapi.User  `json:"assignees,omitempty"`
 	Repository  *Project         `json:"project,omitempty"`
